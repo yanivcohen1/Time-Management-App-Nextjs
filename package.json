@@ -18,7 +18,9 @@
     "primereact": "^10.9.7",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-top-loading-bar": "^3.0.2"
+    "react-top-loading-bar": "^3.0.2",
+    "axios": "^1.12.0",
+    "axios-mock-adapter": "^2.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
