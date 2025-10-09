@@ -53,15 +53,17 @@ export function HeaderNav() {
 
   return (
     <>
-      <button
-        type="button"
-        className="fixed top-4 left-4 z-50 flex h-10 w-10 items-center justify-center rounded-md bg-slate-950 text-slate-200 shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:hidden"
-        aria-label={isMobileOpen ? "Close navigation" : "Open navigation"}
-        aria-expanded={isMobileOpen}
-        onClick={toggleMobileNav}
-      >
-        <FontAwesomeIcon icon={isMobileOpen ? faXmark : faBars} />
-      </button>
+      {!isMobileOpen ? (
+        <button
+          type="button"
+          className="fixed top-4 left-4 z-50 flex h-10 w-10 items-center justify-center rounded-md bg-slate-950 text-slate-200 shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:hidden"
+          aria-label="Open navigation"
+          aria-expanded={isMobileOpen}
+          onClick={toggleMobileNav}
+        >
+          <FontAwesomeIcon icon={faBars} />
+        </button>
+      ) : null}
 
       <aside
         className={`fixed inset-y-0 left-0 z-40 flex w-64 transform flex-col bg-slate-950/95 text-slate-100 shadow-xl transition-transform duration-200 ease-out md:translate-x-0 ${
