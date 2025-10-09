@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Button, Container, Flex, Separator, Text, Theme } from "@radix-ui/themes";
+import { Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
 import "./globals.css";
+import { AuthProvider } from "./auth-context";
+import { HeaderNav } from "../components/header-nav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,25 +32,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
       >
         <Theme accentColor="blue" grayColor="slate" radius="large" scaling="100%">
-          <header>
-            <Container size="3" py="3">
-              <Flex justify="between" align="center" gap="4" wrap="wrap">
-                <Text weight="bold" size="5">
-                  <Link href="/">FocusFlow</Link>
-                </Text>
-                <Flex align="center" gap="3" wrap="wrap">
-                  <Button variant="ghost" color="gray" asChild>
-                    <Link href="/">Menu</Link>
-                  </Button>
-                  <Button variant="soft" color="blue" asChild>
-                    <Link href="/todo">Todo workspace</Link>
-                  </Button>
-                </Flex>
-              </Flex>
-            </Container>
-            <Separator size="4" />
-          </header>
-          {children}
+          <AuthProvider>
+            <HeaderNav />
+            {children}
+          </AuthProvider>
         </Theme>
       </body>
     </html>
