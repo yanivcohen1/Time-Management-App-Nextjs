@@ -35,8 +35,12 @@ export default function RootLayout({
       >
         <Theme accentColor="blue" grayColor="slate" radius="large" scaling="100%">
           <AuthProvider>
-            <HeaderNav />
-            {children}
+            <div className="relative min-h-screen bg-[var(--background)] text-[var(--foreground)] md:pl-64">
+              <HeaderNav />
+              <main className="min-h-screen pt-16 transition-[padding] duration-200 md:pt-0">
+                {children}
+              </main>
+            </div>
           </AuthProvider>
         </Theme>
       </body>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef } from "react";
 import Link from "next/link";
 import {
   Badge,
@@ -26,6 +26,7 @@ import {
 import axios from "axios";
 import LoadingBar, { type LoadingBarRef } from "react-top-loading-bar";
 import MockAdapter from "axios-mock-adapter";
+import { Toast } from "primereact/toast";
 import { useAxiosLoadingBar } from "../hooks/useAxiosLoadingBar";
 import { useAuth } from "./auth-context";
 
@@ -88,22 +89,28 @@ export default function Home() {
   const isAuthenticated = authState.status === "authenticated";
   const role = isAuthenticated ? authState.user.role : undefined;
   const loadingBarRef = useRef<LoadingBarRef | null>(null);
-  const [responseMessage, setResponseMessage] = useState<string | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const toastRef = useRef<Toast | null>(null);
 
   useAxiosLoadingBar(loadingBarRef);
 
   const handleMockRequest = useCallback(async () => {
-    setResponseMessage(null);
-    setErrorMessage(null);
-
     try {
       const { data } = await axios.get<{ message: string }>("/api/data");
-      setResponseMessage(data.message);
+      toastRef.current?.show({
+        severity: "success",
+        summary: "Mock response received",
+        detail: data.message,
+        life: 2000,
+      });
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Unexpected error occurred";
-      setErrorMessage(message);
+      toastRef.current?.show({
+        severity: "error",
+        summary: "Request failed",
+        detail: message,
+        life: 3000,
+      });
     }
   }, []);
 
@@ -111,6 +118,7 @@ export default function Home() {
     <Container size="3" py={{ initial: "5", sm: "7" }}>
       <Flex direction="column" gap="6">
         <LoadingBar color="var(--accent-9)" ref={loadingBarRef} shadow={true} />
+        <Toast ref={toastRef} position="top-right" />
         <Card size="3" variant="surface">
           <Flex
             direction={{ initial: "column", sm: "row" }}
@@ -151,16 +159,6 @@ export default function Home() {
               <Button size="3" variant="solid" onClick={handleMockRequest}>
                 Fetch mock data
               </Button>
-              {responseMessage && (
-                <Text size="2" color="green">
-                  {responseMessage}
-                </Text>
-              )}
-              {errorMessage && (
-                <Text size="2" color="red">
-                  {errorMessage}
-                </Text>
-              )}
             </Flex>
           </Flex>
         </Card>

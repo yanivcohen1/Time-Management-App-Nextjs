@@ -9,6 +9,7 @@ import {
   Container,
   Flex,
   Heading,
+  AlertDialog,
   Separator,
   Tabs,
   Text,
@@ -248,14 +249,40 @@ export default function TodoPage() {
                                       minute: "2-digit",
                                     }).format(todo.createdAt)}
                                   </Text>
-                                  <Button
-                                    size="2"
-                                    variant="soft"
-                                    color="red"
-                                    onClick={() => handleDelete(todo.id)}
-                                  >
-                                    Remove
-                                  </Button>
+                                  <AlertDialog.Root>
+                                    <AlertDialog.Trigger>
+                                      <Button
+                                        size="2"
+                                        variant="soft"
+                                        color="red"
+                                      >
+                                        Remove
+                                      </Button>
+                                    </AlertDialog.Trigger>
+                                    <AlertDialog.Content maxWidth="360px">
+                                      <AlertDialog.Title>Remove todo?</AlertDialog.Title>
+                                      <AlertDialog.Description size="2" color="gray">
+                                        This action can&apos;t be undone. The item will be removed from
+                                        your todo list.
+                                      </AlertDialog.Description>
+                                      <Flex gap="2" justify="end" mt="4">
+                                        <AlertDialog.Cancel>
+                                          <Button variant="soft" color="gray">
+                                            Cancel
+                                          </Button>
+                                        </AlertDialog.Cancel>
+                                        <AlertDialog.Action>
+                                          <Button
+                                            variant="solid"
+                                            color="red"
+                                            onClick={() => handleDelete(todo.id)}
+                                          >
+                                            Remove
+                                          </Button>
+                                        </AlertDialog.Action>
+                                      </Flex>
+                                    </AlertDialog.Content>
+                                  </AlertDialog.Root>
                                 </Flex>
                               </Flex>
                             </Card>
