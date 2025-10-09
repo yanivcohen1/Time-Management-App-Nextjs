@@ -27,7 +27,7 @@ export default function AdminUserDetailPage({ params }: { params: { id: string }
             <Text size="2" color="gray">
               Total quick links
             </Text>
-            <Heading size="5">{totalLinks}</Heading>
+            <Heading size="5" color="gray">{totalLinks}</Heading>
             <Text size="2" color="gray">
               Use this page to audit which entries are available to users.
             </Text>
@@ -39,7 +39,7 @@ export default function AdminUserDetailPage({ params }: { params: { id: string }
             <Text size="2" color="gray">
               Link identifier
             </Text>
-            <Heading size="5">{params.id}</Heading>
+            <Heading size="5" color="gray">{params.id}</Heading>
             <Text size="2" color="gray">
               Cross-reference the ID with change logs or external systems.
             </Text>

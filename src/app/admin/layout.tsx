@@ -106,7 +106,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                 <Text size="2" color="gray">
                   {metric.label}
                 </Text>
-                <Heading size="6">{metric.value}</Heading>
+                <Heading size="6" color="gray">{metric.value}</Heading>
                 <Badge color={metric.tone === "positive" ? "green" : "gray"}>{metric.delta}</Badge>
               </Flex>
             ))}

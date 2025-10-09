@@ -24,7 +24,7 @@ export default function AdminPage() {
                     <Text size="2" color="gray">
                       Quick link #{id}
                     </Text>
-                    <Heading size="4">{link.title}</Heading>
+                    <Heading size="4" color="gray">{link.title}</Heading>
                     <Text size="2" color="gray">
                       {link.description}
                     </Text>
