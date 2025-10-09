@@ -2,26 +2,10 @@ import { notFound } from "next/navigation";
 import { Button, Card, Flex, Heading, Separator, Text } from "@radix-ui/themes";
 import Link from "next/link";
 import { ProtectedPage } from "../../../../components/protected-page";
-
-const QUICK_LINKS = {
-  "1": {
-    title: "Sprint kickoff checklist",
-    description: "Prep stories, confirm owners, and align sprint goals.",
-  },
-  "2": {
-    title: "Handoff summary",
-    description: "Gather context, blockers, and deliverables before handoff.",
-  },
-  "3": {
-    title: "Retrospective notes",
-    description: "Capture wins, pain points, and experiments for the next cycle.",
-  },
-} as const;
-
-type QuickLinkId = keyof typeof QUICK_LINKS;
+import { getQuickLink } from "../../../../data/quick-links";
 
 export default function UserInternalPage({ params }: { params: { id: string } }) {
-  const data = QUICK_LINKS[params.id as QuickLinkId];
+  const data = getQuickLink(params.id);
 
   if (!data) {
     notFound();
