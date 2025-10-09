@@ -3,13 +3,23 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Button, Container, Flex, Separator, Text } from "@radix-ui/themes";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import {
+  faHouse,
+  faListCheck,
+  faRightFromBracket,
+  faRightToBracket,
+  faShieldHalved,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../app/auth-context";
 
-const baseLinks = [
-  { href: "/", label: "Main" },
-  { href: "/todo", label: "Todo" },
-  { href: "/user", label: "User" },
-  { href: "/admin", label: "Admin" },
+const baseLinks: Array<{ href: string; label: string; icon: IconDefinition }> = [
+  { href: "/", label: "Main", icon: faHouse },
+  { href: "/todo", label: "Todo", icon: faListCheck },
+  { href: "/user", label: "User", icon: faUser },
+  { href: "/admin", label: "Admin", icon: faShieldHalved },
 ];
 
 export function HeaderNav() {
@@ -43,20 +53,31 @@ export function HeaderNav() {
               if (!canAccess) {
                 return (
                   <Button key={item.href} variant="soft" color="gray" disabled>
-                    {item.label}
+                    <Flex align="center" gap="2">
+                      <FontAwesomeIcon icon={item.icon} />
+                      <span>{item.label}</span>
+                    </Flex>
                   </Button>
                 );
               }
 
               return (
                 <Button key={item.href} variant={isActive ? "solid" : "ghost"} color="gray" asChild>
-                  <Link href={item.href}>{item.label}</Link>
+                  <Link href={item.href}>
+                    <Flex align="center" gap="2">
+                      <FontAwesomeIcon icon={item.icon} />
+                      <span>{item.label}</span>
+                    </Flex>
+                  </Link>
                 </Button>
               );
             })}
             {isAuthenticated ? (
               <Button color="red" variant="soft" onClick={logout}>
-                Log out
+                <Flex align="center" gap="2">
+                  <FontAwesomeIcon icon={faRightFromBracket} />
+                  <span>Log out</span>
+                </Flex>
               </Button>
             ) : (
               <Button
@@ -64,7 +85,10 @@ export function HeaderNav() {
                 variant={pathname === "/login" ? "solid" : "soft"}
                 onClick={() => router.push("/login")}
               >
-                Log in
+                <Flex align="center" gap="2">
+                  <FontAwesomeIcon icon={faRightToBracket} />
+                  <span>Log in</span>
+                </Flex>
               </Button>
             )}
           </Flex>

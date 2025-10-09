@@ -14,6 +14,15 @@ import {
   Separator,
   Text,
 } from "@radix-ui/themes";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import {
+  faChartSimple,
+  faListCheck,
+  faRobot,
+  faShieldHalved,
+  faUsers,
+} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import LoadingBar, { type LoadingBarRef } from "react-top-loading-bar";
 import MockAdapter from "axios-mock-adapter";
@@ -28,6 +37,7 @@ type MenuItem = {
   disabled?: boolean;
   requiredRoles?: Array<"user" | "admin">;
   callout?: string;
+  icon: IconDefinition;
 };
 
 const MENU_ITEMS: MenuItem[] = [
@@ -36,6 +46,7 @@ const MENU_ITEMS: MenuItem[] = [
     title: "FocusFlow Todos",
     description: "Capture tasks, track progress, and clear completed work.",
     badge: "Productivity",
+    icon: faListCheck,
   },
   {
     slug: "user",
@@ -43,6 +54,7 @@ const MENU_ITEMS: MenuItem[] = [
     description: "Coordinate sprints, share updates, and keep the squad aligned.",
     badge: "Collaboration",
     requiredRoles: ["user", "admin"],
+    icon: faUsers,
   },
   {
     slug: "admin",
@@ -51,16 +63,19 @@ const MENU_ITEMS: MenuItem[] = [
     badge: "Admin",
     requiredRoles: ["admin"],
     callout: "Requires admin role",
+    icon: faShieldHalved,
   },
   {
     title: "Insights (coming soon)",
     description: "Progress analytics and trend lines to keep your team aligned.",
     disabled: true,
+    icon: faChartSimple,
   },
   {
     title: "Automation (coming soon)",
     description: "Automate routine task hygiene with smart rules.",
     disabled: true,
+    icon: faRobot,
   },
 ];
 
@@ -160,9 +175,26 @@ export default function Home() {
             return (
               <Card key={item.title} size="3" variant="surface">
               <Flex direction="column" gap="3" height="100%">
-                <Flex align="center" gap="2">
-                  <Heading size="5">{item.title}</Heading>
-                  {item.badge && <Badge color="blue">{item.badge}</Badge>}
+                <Flex align="center" gap="3">
+                  <Box
+                    aria-hidden="true"
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "2.5rem",
+                      height: "2.5rem",
+                      borderRadius: "var(--radius-3)",
+                      backgroundColor: "var(--accent-a3)",
+                      color: "var(--accent-11)",
+                    }}
+                  >
+                    <FontAwesomeIcon icon={item.icon} size="lg" />
+                  </Box>
+                  <Flex align="center" gap="2">
+                    <Heading size="5">{item.title}</Heading>
+                    {item.badge && <Badge color="blue">{item.badge}</Badge>}
+                  </Flex>
                 </Flex>
                 <Text size="3" color="gray">
                   {item.description}
