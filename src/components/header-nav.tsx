@@ -66,7 +66,7 @@ export function HeaderNav() {
       ) : null}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex w-64 transform flex-col bg-slate-950/95 text-slate-100 shadow-xl transition-transform duration-200 ease-out md:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-40 flex w-56 transform flex-col bg-slate-950/95 text-slate-100 shadow-xl transition-transform duration-200 ease-out md:translate-x-0 ${
           isMobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
