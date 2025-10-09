@@ -29,7 +29,8 @@ export function HeaderNav() {
           </Text>
           <Flex align="center" gap="2" wrap="wrap">
             {baseLinks.map((item) => {
-              const isActive = pathname === item.href;
+              const isNested = item.href !== "/" && pathname.startsWith(`${item.href}/`);
+              const isActive = pathname === item.href || isNested;
               const requiresAuth = item.href === "/user" || item.href === "/admin";
               const requiresAdmin = item.href === "/admin";
 

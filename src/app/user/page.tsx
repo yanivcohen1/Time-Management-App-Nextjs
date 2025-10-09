@@ -24,12 +24,15 @@ export default function UserPage() {
 
         <Flex direction="column" gap="3">
           <Heading size="4">Quick links</Heading>
-          <Flex direction={{ initial: "column", sm: "row" }} gap="3">
+          <Flex direction={{ initial: "column", sm: "row" }} gap="3" wrap="wrap">
             <Button variant="soft" asChild>
               <Link href="/">Command center</Link>
             </Button>
             <Button variant="soft" asChild>
               <Link href="/admin">Admin overview</Link>
+            </Button>
+            <Button variant="soft" color="blue" asChild>
+              <Link href="/user/inter/2">Handoff summary (ID 2)</Link>
             </Button>
           </Flex>
         </Flex>
