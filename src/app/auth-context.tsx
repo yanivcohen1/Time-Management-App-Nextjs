@@ -41,16 +41,16 @@ const KNOWN_USERS: Record<string, { password: string; role: Role }> = {
   admin: { password: "admin123", role: "admin" },
 };
 
-function readInitialState(): AuthState {
+function readStoredState(): AuthState | null {
   if (typeof window === "undefined") {
-    return { status: "unauthenticated" };
+    return null;
   }
 
   try {
     const raw = window.localStorage.getItem(storageKey);
-    if (!raw) return { status: "unauthenticated" };
+    if (!raw) return null;
     const parsed = JSON.parse(raw) as AuthData | null;
-    if (!parsed) return { status: "unauthenticated" };
+    if (!parsed) return null;
     if (parsed.username && (parsed.role === "user" || parsed.role === "admin")) {
       return { status: "authenticated", user: parsed };
     }
@@ -58,11 +58,18 @@ function readInitialState(): AuthState {
     console.warn("Failed to parse auth state", error);
   }
 
-  return { status: "unauthenticated" };
+  return null;
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [authState, setAuthState] = useState<AuthState>(() => readInitialState());
+  const [authState, setAuthState] = useState<AuthState>({ status: "unauthenticated" });
+
+  useEffect(() => {
+    const stored = readStoredState();
+    if (stored) {
+      setAuthState(stored);
+    }
+  }, []);
 
   useEffect(() => {
     if (authState.status === "authenticated") {
