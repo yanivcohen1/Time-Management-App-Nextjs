@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useRef, useState } from "react";
 import Link from "next/link";
 import {
   Badge,
@@ -13,6 +14,10 @@ import {
   Separator,
   Text,
 } from "@radix-ui/themes";
+import axios from "axios";
+import LoadingBar, { type LoadingBarRef } from "react-top-loading-bar";
+import MockAdapter from "axios-mock-adapter";
+import { useAxiosLoadingBar } from "../hooks/useAxiosLoadingBar";
 import { useAuth } from "./auth-context";
 
 type MenuItem = {
@@ -59,14 +64,38 @@ const MENU_ITEMS: MenuItem[] = [
   },
 ];
 
+// mock a 1.5s delay for GET /api/data
+const mock = new MockAdapter(axios, { delayResponse: 1500 });
+mock.onGet("/api/data").reply(200, { message: "Hello from in-memory API!" });
+
 export default function Home() {
   const { authState } = useAuth();
   const isAuthenticated = authState.status === "authenticated";
   const role = isAuthenticated ? authState.user.role : undefined;
+  const loadingBarRef = useRef<LoadingBarRef | null>(null);
+  const [responseMessage, setResponseMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useAxiosLoadingBar(loadingBarRef);
+
+  const handleMockRequest = useCallback(async () => {
+    setResponseMessage(null);
+    setErrorMessage(null);
+
+    try {
+      const { data } = await axios.get<{ message: string }>("/api/data");
+      setResponseMessage(data.message);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Unexpected error occurred";
+      setErrorMessage(message);
+    }
+  }, []);
 
   return (
     <Container size="3" py={{ initial: "5", sm: "7" }}>
       <Flex direction="column" gap="6">
+        <LoadingBar color="var(--accent-9)" ref={loadingBarRef} shadow={true} />
         <Card size="3" variant="surface">
           <Flex
             direction={{ initial: "column", sm: "row" }}
@@ -91,6 +120,32 @@ export default function Home() {
               >
                 Bookmark the Todo space for fast access or keep this menu as your command center.
               </Text>
+            </Flex>
+          </Flex>
+        </Card>
+
+        <Card size="3" variant="surface">
+          <Flex direction={{ initial: "column", sm: "row" }} gap="4" align="center" justify="between">
+            <Flex direction="column" gap="2">
+              <Heading size="4">Demo mock request</Heading>
+              <Text size="3" color="gray">
+                Trigger a simulated network call to see the loading bar hook in action.
+              </Text>
+            </Flex>
+            <Flex direction="column" gap="2" align={{ initial: "stretch", sm: "end" }} width="100%" style={{ maxWidth: "260px" }}>
+              <Button size="3" variant="solid" onClick={handleMockRequest}>
+                Fetch mock data
+              </Button>
+              {responseMessage && (
+                <Text size="2" color="green">
+                  {responseMessage}
+                </Text>
+              )}
+              {errorMessage && (
+                <Text size="2" color="red">
+                  {errorMessage}
+                </Text>
+              )}
             </Flex>
           </Flex>
         </Card>
