@@ -6,7 +6,7 @@ import { Button, Container, Flex, Separator, Text } from "@radix-ui/themes";
 import { useAuth } from "../app/auth-context";
 
 const baseLinks = [
-  { href: "/", label: "Menu" },
+  { href: "/", label: "Main" },
   { href: "/todo", label: "Todo" },
   { href: "/user", label: "User" },
   { href: "/admin", label: "Admin" },
