@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
 import "./globals.css";
+import "primereact/resources/themes/lara-light-cyan/theme.css";
+import "primeicons/primeicons.css";
 import { AuthProvider } from "./auth-context";
 import { HeaderNav } from "../components/header-nav";
 
