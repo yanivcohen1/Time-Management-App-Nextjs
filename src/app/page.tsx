@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import Link from "next/link";
 import {
   Badge,
@@ -11,6 +11,7 @@ import {
   Flex,
   Grid,
   Heading,
+  Select,
   Separator,
   Text,
 } from "@radix-ui/themes";
@@ -90,6 +91,9 @@ export default function Home() {
   const isAuthenticated = authState.status === "authenticated";
   const role = isAuthenticated ? authState.user.role : undefined;
   const toastRef = useRef<Toast | null>(null);
+  const [showSelectBox, setShowSelectBox] = useState(false);
+  const [selectedOption, setSelectedOption] = useState("one");
+  const [confirmedOption, setConfirmedOption] = useState<string | null>(null);
 
   const handleMockRequest = useCallback(async () => {
     try {
@@ -151,10 +155,22 @@ export default function Home() {
               <Text size="3" color="gray">
                 Trigger a simulated network call to see the loading bar hook in action.
               </Text>
+              {confirmedOption && (
+                <Text size="2" color="gray">
+                  Last selection: {confirmedOption}
+                </Text>
+              )}
             </Flex>
             <Flex direction="column" gap="2" align={{ initial: "stretch", sm: "end" }} width="100%" style={{ maxWidth: "260px" }}>
               <Button size="3" variant="solid" onClick={handleMockRequest}>
                 Fetch mock data
+              </Button>
+              <Button
+                size="3"
+                variant="soft"
+                onClick={() => setShowSelectBox((prev) => !prev)}
+              >
+                {showSelectBox ? "Hide select box" : "Show select box"}
               </Button>
             </Flex>
           </Flex>
@@ -224,6 +240,52 @@ export default function Home() {
             );
           })}
         </Grid>
+        {showSelectBox && (
+          <div
+            style={{
+              position: "fixed",
+              bottom: 0,
+              left: "50%",
+              transform: "translateX(-50%)",
+              backgroundColor: "var(--color-surface)",
+              padding: "16px",
+              boxShadow: "0 -2px 5px rgba(0,0,0,0.3)",
+              marginTop: "16px",
+              textAlign: "center",
+              zIndex: 1000,
+              borderRadius: "var(--radius-4)",
+              minWidth: "240px",
+            }}
+          >
+            <Heading as="h6" size="2" style={{ marginBottom: "12px" }} color="gray">
+              Select an option:
+            </Heading>
+            <Flex align="center" justify="center" gap="3">
+              <Select.Root value={selectedOption} onValueChange={setSelectedOption}>
+                <Select.Trigger
+                  variant="surface"
+                  placeholder="Choose"
+                  aria-label="Select option"
+                />
+                <Select.Content position="popper">
+                  <Select.Item value="one">One</Select.Item>
+                  <Select.Item value="two">Two</Select.Item>
+                  <Select.Item value="tree">Tree</Select.Item>
+                </Select.Content>
+              </Select.Root>
+              <Button
+                size="2"
+                onClick={() => {
+                  setConfirmedOption(selectedOption);
+                  console.log("Selected:", selectedOption);
+                  setShowSelectBox(false);
+                }}
+              >
+                Accept
+              </Button>
+            </Flex>
+          </div>
+        )}
       </Flex>
     </Container>
   );
