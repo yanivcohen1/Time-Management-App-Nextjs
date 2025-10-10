@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
 import "./globals.css";
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import "primeicons/primeicons.css";
-import { AuthProvider } from "./auth-context";
-import { HeaderNav } from "../components/header-nav";
+import { LayoutClient } from "./layout-client";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,16 +31,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
       >
-        <Theme accentColor="blue" grayColor="slate" radius="large" scaling="100%">
-          <AuthProvider>
-            <div className="relative min-h-screen bg-[var(--background)] text-[var(--foreground)] md:pl-64">
-              <HeaderNav />
-              <main className="min-h-screen pt-16 transition-[padding] duration-200 md:pt-0">
-                {children}
-              </main>
-            </div>
-          </AuthProvider>
-        </Theme>
+        <LayoutClient>{children}</LayoutClient>
       </body>
     </html>
   );

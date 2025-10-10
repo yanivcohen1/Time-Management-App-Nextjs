@@ -1,16 +1,64 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button, Flex, Heading, Separator, Text } from "@radix-ui/themes";
+import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { BreadCrumb } from "primereact/breadcrumb";
 import type { MenuItem } from "primereact/menuitem";
+import { Toast } from "primereact/toast";
 import { ProtectedPage } from "../../components/protected-page";
+import AddUserForm from "../AddUserForm";
+
+type User = {
+  id: number;
+  name: string;
+  email: string;
+};
+
+async function getUsers(): Promise<User[]> {
+  const res = await axios.get<User[]>("/api/users", {
+    headers: {
+      "Cache-Control": "no-store",
+    },
+  });
+  return res.data;
+}
 
 export default function UserPage() {
   const router = useRouter();
   const [isVisible, setIsVisible] = useState(true);
+  const [users, setUsers] = useState<User[]>([]);
+  const toastRef = useRef<Toast | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    (async () => {
+      try {
+        const data = await getUsers();
+        if (isMounted) {
+          setUsers(data);
+        }
+      } catch (error) {
+        if (isMounted) {
+          const message =
+            error instanceof Error ? error.message : "Unexpected error occurred";
+          toastRef.current?.show({
+            severity: "error",
+            summary: "Failed to load users",
+            detail: message,
+            life: 3000,
+          });
+        }
+      }
+    })();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const breadcrumbItems: MenuItem[] = useMemo(
     () => [
@@ -48,6 +96,7 @@ export default function UserPage() {
         title="Team workspace"
         subtitle="Plan your tasks, review progress, and share updates with your teammates."
       >
+        <Toast ref={toastRef} position="top-right" />
         <BreadCrumb model={breadcrumbItems} home={home} /> <br />
         <Flex direction="column" gap="4">
           <Flex direction={{ initial: "column", sm: "row" }} justify="between" gap="3">
@@ -87,6 +136,8 @@ export default function UserPage() {
             </Flex>
           )}
         </Flex>
+        <Separator size="4" />
+        <AddUserForm initialUsers={users} />
       </ProtectedPage>
     </>
   );

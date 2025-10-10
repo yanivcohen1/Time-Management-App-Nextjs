@@ -24,10 +24,8 @@ import {
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import LoadingBar, { type LoadingBarRef } from "react-top-loading-bar";
 import MockAdapter from "axios-mock-adapter";
 import { Toast } from "primereact/toast";
-import { useAxiosLoadingBar } from "../hooks/useAxiosLoadingBar";
 import { useAuth } from "./auth-context";
 
 type MenuItem = {
@@ -81,17 +79,17 @@ const MENU_ITEMS: MenuItem[] = [
 ];
 
 // mock a 1.5s delay for GET /api/data
-const mock = new MockAdapter(axios, { delayResponse: 1500 });
+const mock = new MockAdapter(axios, {
+  delayResponse: 1500,
+  onNoMatch: "passthrough",
+});
 mock.onGet("/api/data").reply(200, { message: "Hello from in-memory API!" });
 
 export default function Home() {
   const { authState } = useAuth();
   const isAuthenticated = authState.status === "authenticated";
   const role = isAuthenticated ? authState.user.role : undefined;
-  const loadingBarRef = useRef<LoadingBarRef | null>(null);
   const toastRef = useRef<Toast | null>(null);
-
-  useAxiosLoadingBar(loadingBarRef);
 
   const handleMockRequest = useCallback(async () => {
     try {
@@ -117,7 +115,6 @@ export default function Home() {
   return (
     <Container size="3" py={{ initial: "5", sm: "7" }}>
       <Flex direction="column" gap="6">
-        <LoadingBar color="var(--accent-9)" ref={loadingBarRef} shadow={true} />
         <Toast ref={toastRef} position="top-right" />
         <Card size="3" variant="surface">
           <Flex
