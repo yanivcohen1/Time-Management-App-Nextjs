@@ -30,6 +30,7 @@ type AuthContextValue = {
   authState: AuthState;
   login: (payload: LoginPayload) => Promise<{ success: true } | { success: false; message: string }>;
   logout: () => void;
+  isHydrated: boolean;
 };
 
 const storageKey = "focusflow.auth.state";
@@ -63,12 +64,14 @@ function readStoredState(): AuthState | null {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [authState, setAuthState] = useState<AuthState>({ status: "unauthenticated" });
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
     const stored = readStoredState();
     if (stored) {
       setAuthState(stored);
     }
+    setIsHydrated(true);
   }, []);
 
   useEffect(() => {
@@ -103,8 +106,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       authState,
       login,
       logout,
+      isHydrated,
     }),
-    [authState, login, logout]
+    [authState, isHydrated, login, logout]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

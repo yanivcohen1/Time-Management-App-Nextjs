@@ -13,12 +13,16 @@ interface ProtectedPageProps {
 }
 
 export function ProtectedPage({ allowedRoles, title, subtitle, children }: ProtectedPageProps) {
-  const { authState } = useAuth();
+  const { authState, isHydrated } = useAuth();
   const router = useRouter();
   const isAuthenticated = authState.status === "authenticated";
   const role = isAuthenticated ? authState.user.role : undefined;
 
   useEffect(() => {
+    if (!isHydrated) {
+      return;
+    }
+
     if (!isAuthenticated) {
       router.replace("/login");
       return;
@@ -27,7 +31,11 @@ export function ProtectedPage({ allowedRoles, title, subtitle, children }: Prote
     if (role && !allowedRoles.includes(role)) {
       router.replace("/");
     }
-  }, [allowedRoles, isAuthenticated, role, router]);
+  }, [allowedRoles, isAuthenticated, isHydrated, role, router]);
+
+  if (!isHydrated) {
+    return null;
+  }
 
   const isAllowed = isAuthenticated && role ? allowedRoles.includes(role) : false;
 
