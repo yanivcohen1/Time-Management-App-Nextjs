@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { withAuth } from "@/lib/api-auth";
 
 type User = {
   id: number;
@@ -15,10 +16,14 @@ export async function GET() {
   return NextResponse.json(users);
 }
 
-export async function POST(req: NextRequest) {
+export const POST = withAuth(async (req: NextRequest) => {
   const body = await req.json();
   const { name, email } = body as { name: string; email: string };
-  const newUser: User = { id: users.length + 1, name, email };
+  const newUser: User = {
+    id: users.length + 1,
+    name,
+    email,
+  };
   users.push(newUser);
   return NextResponse.json(newUser, { status: 201 });
-}
+}, { roles: ["admin"] }); // if not set default is { roles: ["user"] }

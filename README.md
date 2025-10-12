@@ -1,5 +1,21 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Authentication & API
+
+- Credentials are sourced from a local SQLite database that is seeded on first run (default users: `user/user123`, `admin/admin123`).
+- Sign-in requests hit `POST /api/auth/login`, which issues a short-lived JWT (1h default) saved to `localStorage` by the global Axios interceptor.
+- Protected routes, including `POST /api/users`, require the `Authorization: Bearer <token>` header and will return `401` if the token is missing or expired.
+
+### Environment variables
+
+| Variable | Purpose | Default |
+| --- | --- | --- |
+| `FOCUSFLOW_DB_PATH` | Absolute/relative path to the SQLite database file. | `<project>/data/focusflow.db` |
+| `FOCUSFLOW_JWT_SECRET` | Secret used to sign JWTs. | `focusflow-dev-secret-change-me` (override in production) |
+| `FOCUSFLOW_JWT_EXPIRES_IN` | Expiry passed to `jsonwebtoken` (`1h`, `30m`, etc.). | `1h` |
+
+The database directory is created automatically; database files are git-ignored.
+
 ## Getting Started
 
 First, run the development server:
