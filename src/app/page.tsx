@@ -7,6 +7,7 @@ import {
   Box,
   Button,
   Card,
+  Checkbox,
   Container,
   Flex,
   Grid,
@@ -94,6 +95,7 @@ export default function Home() {
   const [showSelectBox, setShowSelectBox] = useState(false);
   const [selectedOption, setSelectedOption] = useState("one");
   const [confirmedOption, setConfirmedOption] = useState<string | null>(null);
+  const [selectBoxOnTop, setSelectBoxOnTop] = useState(false);
 
   const handleMockRequest = useCallback(async () => {
     try {
@@ -172,6 +174,23 @@ export default function Home() {
               >
                 {showSelectBox ? "Hide select box" : "Show select box"}
               </Button>
+              <Flex align="center" gap="2">
+                <Checkbox
+                  checked={selectBoxOnTop}
+                  onCheckedChange={(checked) =>
+                    setSelectBoxOnTop(checked === true)
+                  }
+                  id="toggle-select-position"
+                />
+                <Text
+                  asChild
+                  size="2"
+                  color="gray"
+                  style={{ cursor: "pointer" }}
+                >
+                  <label htmlFor="toggle-select-position">Show select box at top</label>
+                </Text>
+              </Flex>
             </Flex>
           </Flex>
         </Card>
@@ -244,13 +263,16 @@ export default function Home() {
           <div
             style={{
               position: "fixed",
-              bottom: 0,
+              bottom: selectBoxOnTop ? "auto" : 0,
+              top: selectBoxOnTop ? "16px" : "auto",
               left: "50%",
               transform: "translateX(-50%)",
               backgroundColor: "var(--color-surface)",
               padding: "16px",
-              boxShadow: "0 -2px 5px rgba(0,0,0,0.3)",
-              marginTop: "16px",
+              boxShadow: selectBoxOnTop
+                ? "0 2px 5px rgba(0,0,0,0.3)"
+                : "0 -2px 5px rgba(0,0,0,0.3)",
+              marginTop: selectBoxOnTop ? "0" : "16px",
               textAlign: "center",
               zIndex: 1000,
               borderRadius: "var(--radius-4)",
