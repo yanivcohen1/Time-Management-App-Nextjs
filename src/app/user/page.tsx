@@ -31,32 +31,40 @@ export default function UserPage() {
   const [isVisible, setIsVisible] = useState(true);
   const [users, setUsers] = useState<User[]>([]);
   const toastRef = useRef<Toast | null>(null);
+  const usersRequestRef = useRef<Promise<User[]> | null>(null);
 
   useEffect(() => {
-    let isMounted = true;
+    if (!usersRequestRef.current) {
+      usersRequestRef.current = getUsers();
+    }
 
-    (async () => {
-      try {
-        const data = await getUsers();
-        if (isMounted) {
+    let cancelled = false;
+
+    usersRequestRef.current
+      .then((data) => {
+        if (!cancelled) {
           setUsers(data);
         }
-      } catch (error) {
-        if (isMounted) {
-          const message =
-            error instanceof Error ? error.message : "Unexpected error occurred";
-          toastRef.current?.show({
-            severity: "error",
-            summary: "Failed to load users",
-            detail: message,
-            life: 3000,
-          });
+      })
+      .catch((error) => {
+        if (cancelled) {
+          return;
         }
-      }
-    })();
+
+        usersRequestRef.current = null;
+
+        const message =
+          error instanceof Error ? error.message : "Unexpected error occurred";
+        toastRef.current?.show({
+          severity: "error",
+          summary: "Failed to load users",
+          detail: message,
+          life: 3000,
+        });
+      });
 
     return () => {
-      isMounted = false;
+      cancelled = true;
     };
   }, []);
 
