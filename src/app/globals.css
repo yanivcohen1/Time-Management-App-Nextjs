@@ -32,3 +32,24 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+.p-toast .p-toast-message {
+  opacity: 1;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
+}
+
+.p-toast .p-toast-message.p-toast-message-info {
+  background: rgb(219, 234, 254);
+}
+
+.p-toast .p-toast-message.p-toast-message-success {
+  background: rgb(228, 248, 240);
+}
+
+.p-toast .p-toast-message.p-toast-message-warn {
+  background: rgb(255, 242, 226);
+}
+
+.p-toast .p-toast-message.p-toast-message-error {
+  background: rgb(255, 231, 230);
+}
