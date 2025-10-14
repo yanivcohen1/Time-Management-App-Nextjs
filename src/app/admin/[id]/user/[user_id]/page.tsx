@@ -6,9 +6,19 @@ import Link from "next/link";
 import { getQuickLink, QUICK_LINKS } from "@/data/quick-links";
 import { useAdminView } from "../../../layout";
 
-export default function AdminUserDetailPage({ params }: { params: { user_id: string } }) {
+export default function AdminUserDetailPage({
+  params,
+  searchParams,
+}: {
+  params: { id: string; user_id: string };
+  searchParams?: { [key: string]: string | string[] | undefined };
+}) {
   const quickLink = getQuickLink(params.user_id);
   const { activeView } = useAdminView();
+  const queryIdRaw = searchParams?.id;
+  const queryNameRaw = searchParams?.name;
+  const queryId = Array.isArray(queryIdRaw) ? queryIdRaw[0] : queryIdRaw;
+  const queryName = Array.isArray(queryNameRaw) ? queryNameRaw[0] : queryNameRaw;
 
   if (!quickLink) {
     notFound();
@@ -67,7 +77,7 @@ export default function AdminUserDetailPage({ params }: { params: { user_id: str
 
       <Flex gap="3" wrap="wrap">
         <Button variant="soft" asChild>
-          <Link href="/admin/1">Back to admin overview</Link>
+          <Link href={`/admin/${params.id}`}>Back to admin overview</Link>
         </Button>
         <Button variant="soft" asChild>
           <Link href="/todo">Open todo board</Link>
@@ -85,7 +95,7 @@ export default function AdminUserDetailPage({ params }: { params: { user_id: str
             Active view
           </Text>
           <Badge color={activeView === "admin" ? "indigo" : "blue"}>
-            {activeView === "admin" ? "Admin" : "User"}
+            {activeView}
           </Badge>
         </Flex>
         <Text size="2" color="gray">
@@ -94,6 +104,34 @@ export default function AdminUserDetailPage({ params }: { params: { user_id: str
             : "You're reviewing this entry from the user workspace context."}
         </Text>
       </Flex>
+
+      <Separator size="4" />
+
+      <Card variant="ghost">
+        <Flex direction="column" gap="2">
+          <Text size="2" color="gray">
+            Query parameters
+          </Text>
+          <Flex direction={{ initial: "column", sm: "row" }} gap="6" wrap="wrap">
+            <Flex direction="column" gap="1">
+              <Text size="2" color="gray">
+                id
+              </Text>
+              <Text size="4" weight="medium">
+                {queryId ?? "Not provided"}
+              </Text>
+            </Flex>
+            <Flex direction="column" gap="1">
+              <Text size="2" color="gray">
+                name
+              </Text>
+              <Text size="4" weight="medium">
+                {queryName ?? "Not provided"}
+              </Text>
+            </Flex>
+          </Flex>
+        </Flex>
+      </Card>
     </Flex>
   );
 }

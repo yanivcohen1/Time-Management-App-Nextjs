@@ -40,11 +40,8 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const [activeView, setActiveView] = useState<AdminView>("admin");
 
   useEffect(() => {
-    if (pathname.startsWith("/admin/user")) {
-      setActiveView("user");
-    } else {
-      setActiveView("admin");
-    }
+    const isUserView = /^\/admin\/[^/]+\/user\//.test(pathname);
+    setActiveView(isUserView ? "user" : "admin");
   }, [pathname]);
 
   const breadcrumbItems: MenuItem[] = useMemo(
@@ -62,7 +59,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         icon: "pi pi-user",
         command: () => {
           setActiveView("user");
-          router.push("/admin/3/user/2");
+          router.push("/admin/3/user/2?id=1&name=yar");
         },
       },
     ],
@@ -135,7 +132,14 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               <Link href="/todo">Review todo board</Link>
             </Button>
             <Button variant="soft" asChild>
-              <Link href="/admin/user/2">Review user board</Link>
+              <Link
+                href={{
+                  pathname: "/admin/3/user/2",
+                  query: { id: "1", name: "yar" },
+                }}
+              >
+                Review user board
+              </Link>
             </Button>
             <Button variant="soft" color="red">
               Disable workspace

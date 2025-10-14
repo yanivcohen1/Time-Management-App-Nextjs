@@ -1,6 +1,6 @@
 "use client";
 
-export default function AdminIncidentPage({ params }: { params: { id: string } }) {
+export default function AdminIncidentPage() {
   return ( <></>
   );
 }
