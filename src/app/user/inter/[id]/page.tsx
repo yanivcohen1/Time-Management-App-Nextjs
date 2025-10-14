@@ -7,11 +7,21 @@ import { ProtectedPage } from "../../../../components/protected-page";
 import { getQuickLink } from "../../../../data/quick-links";
 import { Role, useAuth } from "@/app/auth-context";
 
-export default function UserInternalPage({ params }: { params: { id: string } }) {
+export default function UserInternalPage({
+  params,
+  searchParams,
+}: {
+  params: { id: string };
+  searchParams?: { [key: string]: string | string[] | undefined };
+}) {
   const data = getQuickLink(params.id);
   const { authState, isHydrated } = useAuth();
   const isAuthenticated = authState.status === "authenticated";
   const role: Role | undefined = isAuthenticated ? authState.user.role : undefined;
+  const queryIdRaw = searchParams?.id;
+  const queryNameRaw = searchParams?.name;
+  const queryId = Array.isArray(queryIdRaw) ? queryIdRaw[0] : queryIdRaw;
+  const queryName = Array.isArray(queryNameRaw) ? queryNameRaw[0] : queryNameRaw;
 
   if (!data) {
     notFound();
@@ -74,6 +84,34 @@ export default function UserInternalPage({ params }: { params: { id: string } })
             <Link href="/todo">Jump to todo board</Link>
           </Button>
         </Flex>
+
+        <Separator size="4" />
+
+        <Card variant="ghost">
+          <Flex direction="column" gap="2">
+            <Text size="2" color="gray">
+              Query parameters
+            </Text>
+            <Flex direction="row" gap="6" wrap="wrap">
+              <Flex direction="column" gap="1">
+                <Text size="2" color="gray">
+                  id
+                </Text>
+                <Text size="4" weight="medium">
+                  {queryId ?? "Not provided"}
+                </Text>
+              </Flex>
+              <Flex direction="column" gap="1">
+                <Text size="2" color="gray">
+                  name
+                </Text>
+                <Text size="4" weight="medium">
+                  {queryName ?? "Not provided"}
+                </Text>
+              </Flex>
+            </Flex>
+          </Flex>
+        </Card>
       </Flex>
     </ProtectedPage>
   );

@@ -82,7 +82,7 @@ export default function UserPage() {
         label: "inter",
         command: () => {
           setIsVisible(false);
-          router.push("/user/inter/2");
+          router.push("/user/inter/2?id=3&name=tam");
         },
       },
     ],
@@ -130,7 +130,14 @@ export default function UserPage() {
                   <Link href="/admin">Admin overview</Link>
                 </Button>
                 <Button variant="soft" color="blue" asChild>
-                  <Link href="/user/inter/2">Handoff summary (ID 2)</Link>
+                  <Link
+                    href={{
+                      pathname: "/user/inter/2",
+                      query: { id: "1", name: "yan" },
+                    }}
+                  >
+                    Handoff summary (ID 2)
+                  </Link>
                 </Button>
               </Flex>
             </Flex>

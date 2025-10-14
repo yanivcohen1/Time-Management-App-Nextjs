@@ -26,7 +26,12 @@ type BaseLink = {
   icon: IconDefinition;
   requiresAuth?: boolean;
   requiresAdmin?: boolean;
-  children?: Array<{ href: string; label: string; icon: IconDefinition }>;
+  children?: Array<{
+    href: string;
+    label: string;
+    icon: IconDefinition;
+    query?: Record<string, string>;
+  }>;
 };
 
 const baseLinks: BaseLink[] = [
@@ -37,7 +42,14 @@ const baseLinks: BaseLink[] = [
     label: "User",
     icon: faUser,
     requiresAuth: true,
-    children: [{ href: "/user/inter/2", label: "Inter", icon: faFileLines }],
+    children: [
+      {
+        href: "/user/inter/2",
+        label: "Inter",
+        icon: faFileLines,
+        query: { id: "1", name: "yan" },
+      },
+    ],
   },
   {
     href: "/admin",
@@ -211,11 +223,14 @@ export function HeaderNav() {
                       <div className="space-y-1 pt-1">
                         {item.children?.map((child) => {
                           const isChildActive = pathname === child.href;
+                          const childHref = child.query
+                            ? { pathname: child.href, query: child.query }
+                            : child.href;
 
                           return (
                             <Link
                               key={child.href}
-                              href={child.href}
+                              href={childHref}
                               className={navItemStyles(isChildActive)}
                               onClick={() => setIsMobileOpen(false)}
                             >
