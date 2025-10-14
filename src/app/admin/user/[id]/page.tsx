@@ -1,10 +1,14 @@
+"use client"; // for useAdminView
+
 import { notFound } from "next/navigation";
 import { Badge, Button, Card, Flex, Grid, Heading, Separator, Text } from "@radix-ui/themes";
 import Link from "next/link";
 import { getQuickLink, QUICK_LINKS } from "../../../../data/quick-links";
+import { useAdminView } from "../../layout";
 
 export default function AdminUserDetailPage({ params }: { params: { id: string } }) {
   const quickLink = getQuickLink(params.id);
+  const { activeView } = useAdminView();
 
   if (!quickLink) {
     notFound();
@@ -71,6 +75,24 @@ export default function AdminUserDetailPage({ params }: { params: { id: string }
         <Button variant="soft" color="orange">
           Impersonate user
         </Button>
+      </Flex>
+
+      <Separator size="4" />
+
+      <Flex direction="column" gap="1">
+        <Flex align="center" gap="2">
+          <Text size="2" color="gray">
+            Active view
+          </Text>
+          <Badge color={activeView === "admin" ? "indigo" : "blue"}>
+            {activeView === "admin" ? "Admin" : "User"}
+          </Badge>
+        </Flex>
+        <Text size="2" color="gray">
+          {activeView === "admin"
+            ? "You're reviewing this entry from the admin directory."
+            : "You're reviewing this entry from the user workspace context."}
+        </Text>
       </Flex>
     </Flex>
   );
