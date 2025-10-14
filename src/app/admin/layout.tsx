@@ -17,12 +17,6 @@ import { BreadCrumb } from "primereact/breadcrumb";
 import type { MenuItem } from "primereact/menuitem";
 import { ProtectedPage } from "../../components/protected-page";
 
-const metrics = [
-  { label: "Active users", value: "24", delta: "+3 this week", tone: "positive" },
-  { label: "Automation rules", value: "5", delta: "2 pending approvals", tone: "neutral" },
-  { label: "Incidents", value: "0", delta: "Healthy", tone: "positive" },
-];
-
 type AdminView = "admin" | "user";
 
 type AdminViewContextValue = {
@@ -60,7 +54,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         icon: "pi pi-shield",
         command: () => {
           setActiveView("admin");
-          router.push("/admin");
+          router.push("/admin/1");
         },
       },
       {
@@ -68,7 +62,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         icon: "pi pi-user",
         command: () => {
           setActiveView("user");
-          router.push("/admin/user/2");
+          router.push("/admin/3/user/2");
         },
       },
     ],
@@ -81,6 +75,25 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       url: "/",
     }),
     []
+  );
+
+  const activeIncidentId = useMemo(() => {
+    const match = pathname.match(/^\/admin\/(\d+)/);
+    return match?.[1];
+  }, [pathname]);
+
+  const metrics = useMemo(
+    () => [
+      { label: "Active users", value: "24", delta: "+3 this week", tone: "positive" as const },
+      { label: "Automation rules", value: "5", delta: "2 pending approvals", tone: "neutral" as const },
+      {
+        label: "Incidents",
+        value: activeIncidentId ?? "0",
+        delta: activeIncidentId ? `Incident ${activeIncidentId} under review` : "Healthy",
+        tone: activeIncidentId ? (activeIncidentId === "0" ? "positive" : "neutral") : "positive",
+      },
+    ],
+    [activeIncidentId]
   );
 
   return (

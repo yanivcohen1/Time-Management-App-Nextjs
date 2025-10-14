@@ -3,11 +3,11 @@
 import { notFound } from "next/navigation";
 import { Badge, Button, Card, Flex, Grid, Heading, Separator, Text } from "@radix-ui/themes";
 import Link from "next/link";
-import { getQuickLink, QUICK_LINKS } from "../../../../data/quick-links";
-import { useAdminView } from "../../layout";
+import { getQuickLink, QUICK_LINKS } from "@/data/quick-links";
+import { useAdminView } from "../../../layout";
 
-export default function AdminUserDetailPage({ params }: { params: { id: string } }) {
-  const quickLink = getQuickLink(params.id);
+export default function AdminUserDetailPage({ params }: { params: { user_id: string } }) {
+  const quickLink = getQuickLink(params.user_id);
   const { activeView } = useAdminView();
 
   if (!quickLink) {
@@ -43,7 +43,7 @@ export default function AdminUserDetailPage({ params }: { params: { id: string }
             <Text size="2" color="gray">
               Link identifier
             </Text>
-            <Heading size="5" color="gray">{params.id}</Heading>
+            <Heading size="5" color="gray">{params.user_id}</Heading>
             <Text size="2" color="gray">
               Cross-reference the ID with change logs or external systems.
             </Text>
@@ -67,7 +67,7 @@ export default function AdminUserDetailPage({ params }: { params: { id: string }
 
       <Flex gap="3" wrap="wrap">
         <Button variant="soft" asChild>
-          <Link href="/admin">Back to admin overview</Link>
+          <Link href="/admin/1">Back to admin overview</Link>
         </Button>
         <Button variant="soft" asChild>
           <Link href="/todo">Open todo board</Link>

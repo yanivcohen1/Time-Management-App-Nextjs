@@ -127,7 +127,7 @@ export default function UserPage() {
                   <Link href="/">Command center</Link>
                 </Button>
                 <Button variant="soft" asChild>
-                  <Link href="/admin">Admin overview</Link>
+                  <Link href="/admin/1">Admin overview</Link>
                 </Button>
                 <Button variant="soft" color="blue" asChild>
                   <Link

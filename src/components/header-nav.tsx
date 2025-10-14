@@ -26,6 +26,7 @@ type BaseLink = {
   icon: IconDefinition;
   requiresAuth?: boolean;
   requiresAdmin?: boolean;
+  navigateTo?: string;
   children?: Array<{
     href: string;
     label: string;
@@ -57,6 +58,7 @@ const baseLinks: BaseLink[] = [
     icon: faShieldHalved,
     requiresAuth: true,
     requiresAdmin: true,
+    navigateTo: "/admin/1",
   },
 ];
 
@@ -187,11 +189,12 @@ export function HeaderNav() {
               }
 
               if (hasChildren) {
+                const targetHref = item.navigateTo ?? item.href;
                 return (
                   <div key={item.href} className="space-y-1">
                     <div className={navItemStyles(isActive)}>
                       <Link
-                        href={item.href}
+                        href={targetHref}
                         className="flex flex-1 items-center gap-3 text-inherit focus-visible:outline-none"
                         onClick={() => setIsMobileOpen(false)}
                       >
@@ -245,10 +248,11 @@ export function HeaderNav() {
                 );
               }
 
+              const targetHref = item.navigateTo ?? item.href;
               return (
                 <Link
                   key={item.href}
-                  href={item.href}
+                  href={targetHref}
                   className={navItemStyles(isActive)}
                   onClick={() => setIsMobileOpen(false)}
                 >
