@@ -1,11 +1,17 @@
+"use client";
+
 import { notFound } from "next/navigation";
 import { Button, Card, Flex, Heading, Separator, Text } from "@radix-ui/themes";
 import Link from "next/link";
 import { ProtectedPage } from "../../../../components/protected-page";
 import { getQuickLink } from "../../../../data/quick-links";
+import { Role, useAuth } from "@/app/auth-context";
 
 export default function UserInternalPage({ params }: { params: { id: string } }) {
   const data = getQuickLink(params.id);
+  const { authState, isHydrated } = useAuth();
+  const isAuthenticated = authState.status === "authenticated";
+  const role: Role | undefined = isAuthenticated ? authState.user.role : undefined;
 
   if (!data) {
     notFound();
@@ -26,13 +32,34 @@ export default function UserInternalPage({ params }: { params: { id: string } })
         <Separator size="4" />
 
         <Card variant="ghost">
-          <Flex direction="column" gap="2">
-            <Text size="2" color="gray">
-              Link identifier
-            </Text>
-            <Text size="4" weight="medium">
-              {params.id}
-            </Text>
+          <Flex direction="column" gap="3">
+            <Flex direction="row" gap="6" align="center" justify="between" wrap="wrap">
+              <Flex direction="column" gap="1">
+                <Text size="2" color="gray">
+                  Authenticated
+                </Text>
+                <Text size="4" weight="medium">
+                  {isHydrated ? (isAuthenticated ? "Yes" : "No") : "Loading..."}
+                </Text>
+              </Flex>
+              <Flex direction="column" gap="1">
+                <Text size="2" color="gray">
+                  Role
+                </Text>
+                <Text size="4" weight="medium">
+                  {isHydrated ? role ?? "Unavailable" : "Loading..."}
+                </Text>
+              </Flex>
+              <Flex direction="column" gap="1">
+                <Text size="2" color="gray">
+                  Link identifier
+                </Text>
+                <Text size="4" weight="medium">
+                  {params.id}
+                </Text>
+              </Flex>
+            </Flex>
+
             <Text size="2" color="gray">
               Use the ID to deep link specific quick-link entries or to sync with external docs.
             </Text>
