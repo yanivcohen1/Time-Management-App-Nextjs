@@ -10,7 +10,7 @@ import {
   useState,
 } from "react";
 import axios from "axios";
-import { clearJwtToken, persistJwtToken, readJwtToken } from "@/lib/jwt-storage";
+import { clearJwtToken, persistJwtToken, readJwtToken } from "@/lib-fe/jwt-storage";
 
 export type Role = "user" | "admin";
 

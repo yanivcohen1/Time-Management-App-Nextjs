@@ -1,10 +1,18 @@
 "use client"; // for useAdminView
 
 import { notFound } from "next/navigation";
-import { Badge, Button, Card, Flex, Grid, Heading, Separator, Text } from "@radix-ui/themes";
+import { Badge, Button, Card, Flex, Grid, Heading, Separator, Text, Switch } from "@radix-ui/themes";
 import Link from "next/link";
 import { getQuickLink, QUICK_LINKS } from "@/data/quick-links";
 import { useAdminView } from "../../../layout";
+// import { useSearchParams } from "next/navigation";
+// const searchParams = useSearchParams();
+// const page = searchParams.get("page");
+// const sort = searchParams.get("sort");
+// import { useParams } from "next/navigation";
+// const params = useParams();
+// const id = params.id;
+// const user_id = params.user_id;
 
 export default function AdminUserDetailPage({
   params,
@@ -14,7 +22,7 @@ export default function AdminUserDetailPage({
   searchParams?: { [key: string]: string | string[] | undefined };
 }) {
   const quickLink = getQuickLink(params.user_id);
-  const { activeView } = useAdminView();
+  const { activeView, setActiveView } = useAdminView();
   const queryIdRaw = searchParams?.id;
   const queryNameRaw = searchParams?.name;
   const queryId = Array.isArray(queryIdRaw) ? queryIdRaw[0] : queryIdRaw;
@@ -91,6 +99,10 @@ export default function AdminUserDetailPage({
 
       <Flex direction="column" gap="1">
         <Flex align="center" gap="2">
+          <Switch
+              checked={activeView === "user"}
+              onCheckedChange={(checked) => setActiveView(checked ? "user" : "admin")}
+            />
           <Text size="2" color="gray">
             Active view
           </Text>

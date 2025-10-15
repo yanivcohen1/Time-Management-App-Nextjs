@@ -6,11 +6,10 @@ import {
   type ReactNode,
   type SetStateAction,
   useContext,
-  useEffect,
   useMemo,
   useState,
 } from "react";
-import { Badge, Button, Flex, Grid, Heading, Separator, Text } from "@radix-ui/themes";
+import { Badge, Button, Flex, Grid, Heading, Separator, Switch, Text } from "@radix-ui/themes";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { BreadCrumb } from "primereact/breadcrumb";
@@ -35,14 +34,9 @@ export const useAdminView = () => {
 };
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
-  const router = useRouter();
   const pathname = usePathname();
+    const router = useRouter();
   const [activeView, setActiveView] = useState<AdminView>("admin");
-
-  useEffect(() => {
-    const isUserView = /^\/admin\/[^/]+\/user\//.test(pathname);
-    setActiveView(isUserView ? "user" : "admin");
-  }, [pathname]);
 
   const breadcrumbItems: MenuItem[] = useMemo(
     () => [
@@ -63,7 +57,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         },
       },
     ],
-    [router]
+    [setActiveView]
   );
 
   const home: MenuItem = useMemo(
@@ -101,7 +95,21 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         title="Admin control room"
         subtitle="Manage access, monitor activity, and curate FocusFlow workspaces."
       >
-        <BreadCrumb model={breadcrumbItems} home={home} /> <br/>
+        <Flex direction="column" gap="3">
+          <BreadCrumb model={breadcrumbItems} home={home} />
+          <Flex align="center" gap="2">
+            <Text size="2" color="gray">
+              Admin
+            </Text>
+            <Switch
+              checked={activeView === "user"}
+              onCheckedChange={(checked) => setActiveView(checked ? "user" : "admin")}
+            />
+            <Text size="2" color="gray">
+              User
+            </Text>
+          </Flex>
+        </Flex>
         <Flex direction="column" gap="4">
           <Heading size="5">Key metrics</Heading>
           <Grid columns={{ initial: "1", sm: "3" }} gap="3">

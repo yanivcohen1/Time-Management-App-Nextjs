@@ -7,7 +7,7 @@ import axios, {
   type InternalAxiosRequestConfig,
 } from "axios";
 import type { LoadingBarRef } from "react-top-loading-bar";
-import { clearJwtToken, readJwtToken } from "@/lib/jwt-storage";
+import { clearJwtToken, readJwtToken } from "@/lib-fe/jwt-storage";
 import { useGlobalToast } from "@/components/global-toast-provider";
 
 export const useAxiosLoadingBar = (
