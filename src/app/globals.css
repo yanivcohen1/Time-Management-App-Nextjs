@@ -33,6 +33,36 @@ body {
   flex-direction: column;
 }
 
+.collapsible-content[data-state="open"] {
+  animation: slideDown 180ms ease-out;
+}
+
+.collapsible-content[data-state="closed"] {
+  animation: slideUp 140ms ease-in;
+}
+
+.collapsible-content {
+  overflow: hidden;
+}
+
+@keyframes slideDown {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-collapsible-content-height);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    height: var(--radix-collapsible-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
 .p-toast .p-toast-message {
   opacity: 1;
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);

@@ -16,6 +16,7 @@ import {
   Separator,
   Text,
 } from "@radix-ui/themes";
+import * as Collapsible from "@radix-ui/react-collapsible";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
@@ -100,6 +101,7 @@ export default function Home() {
   const [confirmedOption, setConfirmedOption] = useState<string | null>(null);
   const [selectBoxOnTop, setSelectBoxOnTop] = useState(false);
   const [isStickyVisible, setIsStickyVisible] = useState(true);
+  const [isCollapsibleOpen, setIsCollapsibleOpen] = useState(false);
   const [stickyAnswer, setStickyAnswer] = useState<string | null>(null);
 
   const handleMockRequest = useCallback(async () => {
@@ -233,6 +235,23 @@ export default function Home() {
               >
                 {isStickyVisible ? "Hide sticky note" : "Show sticky note"}
               </Button>
+              <Collapsible.Root open={isCollapsibleOpen} onOpenChange={setIsCollapsibleOpen}>
+                <Collapsible.Trigger asChild>
+                  <Button size="3" variant="soft">
+                    {isCollapsibleOpen ? "Hide collapsible note" : "Show collapsible note"}
+                  </Button>
+                </Collapsible.Trigger>
+                <Collapsible.Content
+                  className="collapsible-content"
+                  style={{ marginTop: "var(--space-2)" }}
+                >
+                  <Card size="2" variant="surface">
+                    <Text size="2" color="gray">
+                      Keep quick reminders here while testing interactions—collapse it once you’re done.
+                    </Text>
+                  </Card>
+                </Collapsible.Content>
+              </Collapsible.Root>
               <Button
                 size="3"
                 variant="soft"
