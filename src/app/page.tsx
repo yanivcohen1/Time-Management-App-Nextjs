@@ -267,12 +267,20 @@ export default function Home() {
               >
                 {isStickyVisible ? "Hide sticky note" : "Show sticky note"}
               </Button>
-              <Collapsible.Root open={isCollapsibleOpen} onOpenChange={setIsCollapsibleOpen}>
-                <Collapsible.Trigger asChild>
-                  <Button size="3" variant="soft">
-                    {isCollapsibleOpen ? "Hide collapsible note" : "Show collapsible note"}
-                  </Button>
-                </Collapsible.Trigger>
+              <Collapsible.Root
+                open={isCollapsibleOpen}
+                onOpenChange={setIsCollapsibleOpen}
+                style={{ width: "100%", alignSelf: "stretch" }}
+              >
+                <Flex justify="end" style={{ width: "100%" }}>
+                  <Collapsible.Trigger asChild>
+                    <Button size="3" variant="soft" style={{ marginLeft: "auto" }}>
+                      {isCollapsibleOpen
+                        ? "Hide collapsible note"
+                        : "Show collapsible note"}
+                    </Button>
+                  </Collapsible.Trigger>
+                </Flex>
                 <Collapsible.Content
                   className="collapsible-content"
                   style={{ marginTop: "var(--space-2)" }}
