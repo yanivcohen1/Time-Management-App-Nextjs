@@ -156,14 +156,14 @@ export default function Home() {
 
   return (
     <Container size="3" py={{ initial: "5", sm: "7" }}>
-      <Flex direction="column" gap="6">
+  <Flex direction="column" gap="1">
         <Toast ref={toastRef} position="top-right" />
-        <Card size="3" variant="surface">
+    <Card size="3" variant="surface">
           <Flex
             direction={{ initial: "column", sm: "row" }}
             justify="between"
             align={{ sm: "center" }}
-            gap="5"
+            gap="4"
           >
             <Flex direction="column" gap="2">
               <Heading size="7">Welcome to FocusFlow</Heading>
@@ -189,14 +189,13 @@ export default function Home() {
         {isStickyVisible && (
           <Box
             style={{
-              marginTop: "calc(var(--space-6, 24px) * -1)",
-              marginBottom: "calc(var(--space-6, 24px) * -1)",
+              marginTop: "calc(var(--space-4) * -1)",
             }}
           >
             <Sticky
               topOffset={-24}
               stickyStyle={{
-                zIndex: 1,
+                zIndex: 100,
               }}
             >
               <Card
@@ -230,7 +229,7 @@ export default function Home() {
           </Box>
         )}
 
-        <Card size="3" variant="surface">
+    <Card size="3" variant="surface">
           <Flex direction={{ initial: "column", sm: "row" }} gap="4" align="center" justify="between">
             <Flex direction="column" gap="2">
               <Heading size="4">Demo mock request</Heading>
@@ -367,7 +366,7 @@ export default function Home() {
           </Flex>
         </Card>
 
-        <Grid columns={{ initial: "1", sm: "2" }} gap="5">
+  <Grid columns={{ initial: "1", sm: "2" }} gap="1">
           {MENU_ITEMS.map((item) => {
             const allowed = item.requiredRoles
               ? isAuthenticated && role && item.requiredRoles.includes(role)
