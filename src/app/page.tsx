@@ -28,6 +28,7 @@ import * as Collapsible from "@radix-ui/react-collapsible";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
+  faBolt,
   faChartSimple,
   faListCheck,
   faRobot,
@@ -229,10 +230,27 @@ export default function Home() {
           </Box>
         )}
 
-    <Card size="3" variant="surface">
-          <Flex direction={{ initial: "column", sm: "row" }} gap="4" align="center" justify="between">
+        <Card size="3" variant="surface">
+          <Flex direction={{ initial: "column", sm: "row" }} gap="4" justify="between">
             <Flex direction="column" gap="2">
-              <Heading size="4">Demo mock request</Heading>
+              <Flex align="center" gap="2">
+                <Box
+                  aria-hidden="true"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "2.5rem",
+                    height: "2.5rem",
+                    borderRadius: "var(--radius-3)",
+                    backgroundColor: "var(--accent-a3)",
+                    color: "var(--accent-11)",
+                  }}
+                >
+                  <FontAwesomeIcon icon={faBolt} size="lg" />
+                </Box>
+                <Heading size="5">Demo mock request</Heading>
+              </Flex>
               <Text size="3" color="gray">
                 Trigger a simulated network call to see the loading bar hook in action.
               </Text>
