@@ -189,7 +189,7 @@ export default function Home() {
         {isStickyVisible && (
           <Box
             style={{
-              marginTop: "calc(var(--space-4) * -1)",
+              marginTop: "calc(var(--space-0) * -1)",
             }}
           >
             <Sticky
