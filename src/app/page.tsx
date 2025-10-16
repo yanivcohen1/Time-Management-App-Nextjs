@@ -1,6 +1,12 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import {
+  useCallback,
+  useRef,
+  useState,
+  type ComponentProps,
+  type ReactElement,
+} from "react";
 import Link from "next/link";
 import {
   Badge,
@@ -9,12 +15,14 @@ import {
   Card,
   Checkbox,
   Container,
+  DropdownMenu,
   Flex,
   Grid,
   Heading,
   Select,
   Separator,
   Text,
+  Popover,
 } from "@radix-ui/themes";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -91,6 +99,18 @@ mock.onGet("/api/data").reply(200, { message: "Hello from in-memory API!" });
 
 const STICKY_PROMPT = "Do you want to save changes?";
 
+const ThemedPopoverTrigger = Popover.Trigger as unknown as (
+  props: ComponentProps<typeof Popover.Trigger> & { asChild?: boolean }
+) => ReactElement;
+
+const ThemedPopoverClose = Popover.Close as unknown as (
+  props: ComponentProps<typeof Popover.Close> & { asChild?: boolean }
+) => ReactElement;
+
+const ThemedDropdownTrigger = DropdownMenu.Trigger as unknown as (
+  props: ComponentProps<typeof DropdownMenu.Trigger> & { asChild?: boolean }
+) => ReactElement;
+
 export default function Home() {
   const { authState } = useAuth();
   const isAuthenticated = authState.status === "authenticated";
@@ -103,6 +123,10 @@ export default function Home() {
   const [isStickyVisible, setIsStickyVisible] = useState(true);
   const [isCollapsibleOpen, setIsCollapsibleOpen] = useState(false);
   const [stickyAnswer, setStickyAnswer] = useState<string | null>(null);
+  const [quickSaveChoice, setQuickSaveChoice] = useState<string | null>(null);
+  const [savePopoverChoice, setSavePopoverChoice] = useState<string | null>(
+    null
+  );
 
   const handleMockRequest = useCallback(async () => {
     try {
@@ -222,6 +246,14 @@ export default function Home() {
                     Answer: {stickyAnswer}
                   </Text>
                 )}
+                {savePopoverChoice && (
+                  <Text size="2" color="gray">
+                    Save popover choice: {savePopoverChoice}
+                  </Text>
+                )}
+                <Text size="2" color="gray">
+                  Quick save choice: {quickSaveChoice ?? "None yet"}
+                </Text>
               </Flex>
             </Flex>
             <Flex direction="column" gap="2" align={{ initial: "stretch", sm: "end" }} width="100%" style={{ maxWidth: "260px" }}>
@@ -252,6 +284,53 @@ export default function Home() {
                   </Card>
                 </Collapsible.Content>
               </Collapsible.Root>
+              <Popover.Root>
+                {/* Use the themed button as trigger even though typings omit asChild. */}
+                <ThemedPopoverTrigger asChild>
+                  <Button size="3" variant="soft">Show save popover</Button>
+                </ThemedPopoverTrigger>
+                <Popover.Content size="2" align="end">
+                  <Flex direction="column" gap="3">
+                    <Text size="3" weight="medium">
+                      Save changes?
+                    </Text>
+                    <Flex justify="end" gap="2">
+                      <ThemedPopoverClose asChild>
+                        <Button
+                          size="2"
+                          variant="soft"
+                          color="gray"
+                          onClick={() => setSavePopoverChoice("No")}
+                        >
+                          No
+                        </Button>
+                      </ThemedPopoverClose>
+                      <ThemedPopoverClose asChild>
+                        <Button
+                          size="2"
+                          variant="solid"
+                          onClick={() => setSavePopoverChoice("Yes")}
+                        >
+                          Yes
+                        </Button>
+                      </ThemedPopoverClose>
+                    </Flex>
+                  </Flex>
+                </Popover.Content>
+              </Popover.Root>
+              <DropdownMenu.Root>
+                <ThemedDropdownTrigger asChild>
+                  <Button size="3" variant="soft">Quick save menu</Button>
+                </ThemedDropdownTrigger>
+                <DropdownMenu.Content align="end" loop>
+                  <DropdownMenu.Item onSelect={() => setQuickSaveChoice("Save")}>
+                    Save
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Item onSelect={() => setQuickSaveChoice("No Save")}>
+                    No save
+                  </DropdownMenu.Item>
+                </DropdownMenu.Content>
+              </DropdownMenu.Root>
               <Button
                 size="3"
                 variant="soft"
