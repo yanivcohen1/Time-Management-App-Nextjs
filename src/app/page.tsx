@@ -29,6 +29,7 @@ import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
 import { Toast } from "primereact/toast";
 import { useAuth } from "./auth-context";
+import Sticky from "react-sticky-el";
 
 type MenuItem = {
   slug?: string;
@@ -87,6 +88,8 @@ const mock = new MockAdapter(axios, {
 });
 mock.onGet("/api/data").reply(200, { message: "Hello from in-memory API!" });
 
+const STICKY_PROMPT = "Do you want to save changes?";
+
 export default function Home() {
   const { authState } = useAuth();
   const isAuthenticated = authState.status === "authenticated";
@@ -96,6 +99,8 @@ export default function Home() {
   const [selectedOption, setSelectedOption] = useState("one");
   const [confirmedOption, setConfirmedOption] = useState<string | null>(null);
   const [selectBoxOnTop, setSelectBoxOnTop] = useState(false);
+  const [isStickyVisible, setIsStickyVisible] = useState(true);
+  const [stickyAnswer, setStickyAnswer] = useState<string | null>(null);
 
   const handleMockRequest = useCallback(async () => {
     try {
@@ -116,6 +121,11 @@ export default function Home() {
         life: 3000,
       });
     }
+  }, []);
+
+  const handleStickyAnswer = useCallback((answer: "Yes" | "No") => {
+    setStickyAnswer(answer);
+    setIsStickyVisible(false);
   }, []);
 
   return (
@@ -150,6 +160,50 @@ export default function Home() {
           </Flex>
         </Card>
 
+        {isStickyVisible && (
+          <Box
+            style={{
+              marginTop: "calc(var(--space-6, 24px) * -1)",
+              marginBottom: "calc(var(--space-6, 24px) * -1)",
+            }}
+          >
+            <Sticky
+              topOffset={-24}
+              stickyStyle={{
+                zIndex: 1,
+              }}
+            >
+              <Card
+                size="2"
+                variant="surface"
+                style={{
+                  borderLeft: "4px solid var(--accent-9)",
+                  width: "fit-content",
+                  maxWidth: "100%",
+                  margin: "0 auto",
+                  background:
+                    "linear-gradient(135deg, rgba(59, 130, 246, 0.18), rgba(59, 130, 246, 0.06))",
+                  boxShadow: "0 12px 30px rgba(15, 23, 42, 0.15)",
+                }}
+              >
+                <Flex align="center" justify="center" gap="3" wrap="wrap">
+                  <Text size="3" color="gray" style={{ flex: "0 1 auto", textAlign: "center" }}>
+                    {STICKY_PROMPT}
+                  </Text>
+                  <Flex gap="2">
+                    <Button variant="soft" size="2" onClick={() => handleStickyAnswer("Yes")}>
+                      Yes
+                    </Button>
+                    <Button variant="soft" size="2" color="red" onClick={() => handleStickyAnswer("No")}>
+                      No
+                    </Button>
+                  </Flex>
+                </Flex>
+              </Card>
+            </Sticky>
+          </Box>
+        )}
+
         <Card size="3" variant="surface">
           <Flex direction={{ initial: "column", sm: "row" }} gap="4" align="center" justify="between">
             <Flex direction="column" gap="2">
@@ -157,15 +211,27 @@ export default function Home() {
               <Text size="3" color="gray">
                 Trigger a simulated network call to see the loading bar hook in action.
               </Text>
-              {confirmedOption && (
+              <Flex direction="column" gap="1">
                 <Text size="2" color="gray">
-                  Last selection: {confirmedOption}
+                  Last selection: {confirmedOption ?? "None yet"}
                 </Text>
-              )}
+                {stickyAnswer && (
+                  <Text size="2" color="gray">
+                    Answer: {stickyAnswer}
+                  </Text>
+                )}
+              </Flex>
             </Flex>
             <Flex direction="column" gap="2" align={{ initial: "stretch", sm: "end" }} width="100%" style={{ maxWidth: "260px" }}>
               <Button size="3" variant="solid" onClick={handleMockRequest}>
                 Fetch mock data
+              </Button>
+              <Button
+                size="3"
+                variant="soft"
+                onClick={() => setIsStickyVisible((prev) => !prev)}
+              >
+                {isStickyVisible ? "Hide sticky note" : "Show sticky note"}
               </Button>
               <Button
                 size="3"
