@@ -130,7 +130,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             ))}
           </Grid>
 
-          <Separator size="4" />
+          {/* <Separator size="4" /> */}
 
           <Flex direction={{ initial: "column", sm: "row" }} gap="3">
             <Button variant="soft" asChild>

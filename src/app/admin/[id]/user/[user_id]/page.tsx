@@ -35,7 +35,31 @@ export default function AdminUserDetailPage({
   const totalLinks = Object.keys(QUICK_LINKS).length;
 
   return (
+    
     <Flex direction="column" gap="5">
+
+      <Flex direction="column" gap="1">
+        <Flex align="center" gap="2">
+          <Switch
+              checked={activeView === "user"}
+              onCheckedChange={(checked) => setActiveView(checked ? "user" : "admin")}
+            />
+          <Text size="2" color="gray">
+            Active view
+          </Text>
+          <Badge color={activeView === "admin" ? "indigo" : "blue"}>
+            {activeView}
+          </Badge>
+        </Flex>
+        <Text size="2" color="gray">
+          {activeView === "admin"
+            ? "You're reviewing this entry from the admin directory."
+            : "You're reviewing this entry from the user workspace context."}
+        </Text>
+      </Flex>
+
+      {/* <Separator size="4" /> */}
+
       <Flex direction="column" gap="2">
         <Heading size="6">{quickLink.title}</Heading>
         <Text size="3" color="gray">
@@ -93,28 +117,6 @@ export default function AdminUserDetailPage({
         <Button variant="soft" color="orange">
           Impersonate user
         </Button>
-      </Flex>
-
-      <Separator size="4" />
-
-      <Flex direction="column" gap="1">
-        <Flex align="center" gap="2">
-          <Switch
-              checked={activeView === "user"}
-              onCheckedChange={(checked) => setActiveView(checked ? "user" : "admin")}
-            />
-          <Text size="2" color="gray">
-            Active view
-          </Text>
-          <Badge color={activeView === "admin" ? "indigo" : "blue"}>
-            {activeView}
-          </Badge>
-        </Flex>
-        <Text size="2" color="gray">
-          {activeView === "admin"
-            ? "You're reviewing this entry from the admin directory."
-            : "You're reviewing this entry from the user workspace context."}
-        </Text>
       </Flex>
 
       <Separator size="4" />

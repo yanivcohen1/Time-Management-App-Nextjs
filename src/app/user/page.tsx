@@ -105,7 +105,7 @@ export default function UserPage() {
         subtitle="Plan your tasks, review progress, and share updates with your teammates."
       >
         <Toast ref={toastRef} position="top-right" />
-        <BreadCrumb model={breadcrumbItems} home={home} /> <br />
+        {/* <BreadCrumb model={breadcrumbItems} home={home} /> <br /> */}
         <Flex direction="column" gap="4">
           <Flex direction={{ initial: "column", sm: "row" }} justify="between" gap="3">
             <Heading size="5">Daily focus</Heading>
