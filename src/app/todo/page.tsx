@@ -254,7 +254,7 @@ export default function TodoPage() {
                             {filteredTodos.length === 0 ? (
                               <CSSTransition
                                 key="empty-state"
-                                timeout={220}
+                                timeout={300}
                                 classNames="todo-slide"
                                 nodeRef={getNodeRef("empty-state")}
                               >
