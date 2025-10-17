@@ -1,6 +1,14 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
+import {
+  FormEvent,
+  MutableRefObject,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   Box,
   Button,
@@ -68,6 +76,14 @@ export default function TodoPage() {
   const [todos, setTodos] = useState<TodoItem[]>(seedTodos);
   const [filter, setFilter] = useState<FilterValue>("all");
   const [draft, setDraft] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const nodeRefs = useRef(new Map<string, MutableRefObject<HTMLDivElement | null>>());
+  const getNodeRef = useCallback((id: string) => {
+    if (!nodeRefs.current.has(id)) {
+      nodeRefs.current.set(id, { current: null });
+    }
+    return nodeRefs.current.get(id)!;
+  }, []);
 
   const stats = useMemo(() => {
     const total = todos.length;
@@ -101,14 +117,23 @@ export default function TodoPage() {
   }
 
   function getFilteredTodos(value: FilterValue) {
-    switch (value) {
-      case "active":
-        return todos.filter((todo) => !todo.completed);
-      case "completed":
-        return todos.filter((todo) => todo.completed);
-      default:
-        return todos;
-    }
+    const statusFiltered = (() => {
+      switch (value) {
+        case "active":
+          return todos.filter((todo) => !todo.completed);
+        case "completed":
+          return todos.filter((todo) => todo.completed);
+        default:
+          return todos;
+      }
+    })();
+
+    const normalizedSearch = searchTerm.trim().toLowerCase();
+    if (!normalizedSearch) return statusFiltered;
+
+    return statusFiltered.filter((todo) =>
+      todo.text.toLowerCase().includes(normalizedSearch)
+    );
   }
 
   return (
@@ -180,8 +205,13 @@ export default function TodoPage() {
               </Flex>
 
               <Box pt="3">
-                {FILTERS.map((item) => (
-                  <Tabs.Content key={item.value} value={item.value}>
+                {FILTERS.map((item) => {
+                  const filteredTodos = getFilteredTodos(item.value);
+                  const showingSearchMessage =
+                    filteredTodos.length === 0 && searchTerm.trim().length > 0;
+
+                  return (
+                    <Tabs.Content key={item.value} value={item.value}>
                     <Flex direction="column" gap="3">
                       <Box asChild>
                         <form onSubmit={handleSubmit} aria-label="Add a todo">
@@ -206,88 +236,132 @@ export default function TodoPage() {
                         </form>
                       </Box>
 
+                      <TextField.Root
+                        value={searchTerm}
+                        onChange={(event) => setSearchTerm(event.target.value)}
+                        placeholder="Search tasks"
+                        aria-label="Search tasks"
+                        radius="full"
+                        variant="surface"
+                        size="3"
+                      />
+
                       <Separator size="4" />
 
                       <Flex direction="column" gap="2">
-                        {getFilteredTodos(item.value).length === 0 ? (
-                          <Card variant="classic">
-                            <Flex direction="column" gap="2" align="center" py="5">
-                              <Heading size="3">Nothing here yet</Heading>
-                              <Text size="2" color="gray" align="center">
-                                Add something new or switch to another view.
-                              </Text>
-                            </Flex>
-                          </Card>
-                        ) : (
-                          getFilteredTodos(item.value).map((todo) => (
-                            <Card key={todo.id} variant="ghost" size="2">
-                              <Flex justify="between" align="center" gap="4">
-                                <Flex align="center" gap="3" asChild>
-                                  <label>
-                                    <Checkbox
-                                      checked={todo.completed}
-                                      onCheckedChange={() => handleToggle(todo.id)}
-                                      size="3"
-                                    />
-                                    <Text
-                                      size="3"
-                                      style={{
-                                        textDecoration: todo.completed
-                                          ? "line-through"
-                                          : "none",
-                                        opacity: todo.completed ? 0.6 : 1,
-                                      }}
-                                    >
-                                      {todo.text}
-                                    </Text>
-                                  </label>
-                                </Flex>
-                                <Flex align="center" gap="3" wrap="wrap">
-                                  <Text size="2" color="gray">
-                                    {new Intl.DateTimeFormat(undefined, {
-                                      hour: "numeric",
-                                      minute: "2-digit",
-                                    }).format(todo.createdAt)}
-                                  </Text>
-                                  <AlertDialog.Root>
-                                    <AlertDialog.Trigger>
-                                      <Button
-                                        size="2"
-                                        variant="soft"
-                                        color="red"
-                                      >
-                                        Remove
-                                      </Button>
-                                    </AlertDialog.Trigger>
-                                    <AlertDialog.Content maxWidth="360px">
-                                      <AlertDialog.Title>Remove todo?</AlertDialog.Title>
-                                      <AlertDialog.Description size="2" color="gray">
-                                        This action can&apos;t be undone. The item will be removed from
-                                        your todo list.
-                                      </AlertDialog.Description>
-                                      <Flex gap="2" justify="end" mt="4">
-                                        <AlertDialog.Cancel>
-                                          <Button variant="soft" color="gray">
-                                            Cancel
-                                          </Button>
-                                        </AlertDialog.Cancel>
-                                        <AlertDialog.Action>
-                                          <Button
-                                            variant="solid"
-                                            color="red"
-                                            onClick={() => handleDelete(todo.id)}
-                                          >
-                                            Remove
-                                          </Button>
-                                        </AlertDialog.Action>
-                                      </Flex>
-                                    </AlertDialog.Content>
-                                  </AlertDialog.Root>
-                                </Flex>
-                              </Flex>
-                            </Card>
-                          ))
-                        )}
+                        <Box className="todo-transition-group">
+                          <TransitionGroup component={null}>
+                            {filteredTodos.length === 0 ? (
+                              <CSSTransition
+                                key="empty-state"
+                                timeout={220}
+                                classNames="todo-slide"
+                                nodeRef={getNodeRef("empty-state")}
+                              >
+                                <div
+                                  ref={getNodeRef("empty-state")}
+                                  className="todo-slide-item"
+                                >
+                                  <Card variant="classic">
+                                    <Flex direction="column" gap="2" align="center" py="5">
+                                      <Heading size="3">
+                                        {showingSearchMessage
+                                          ? "No tasks match your search"
+                                          : "Nothing here yet"}
+                                      </Heading>
+                                      <Text size="2" color="gray" align="center">
+                                        {showingSearchMessage
+                                          ? "Try a different keyword or clear the search box."
+                                          : "Add something new or switch to another view."}
+                                      </Text>
+                                    </Flex>
+                                  </Card>
+                                </div>
+                              </CSSTransition>
+                            ) : (
+                              filteredTodos.map((todo) => {
+                                const nodeRef = getNodeRef(todo.id);
+                                return (
+                                  <CSSTransition
+                                    key={todo.id}
+                                    timeout={220}
+                                    classNames="todo-slide"
+                                    nodeRef={nodeRef}
+                                  >
+                                    <div ref={nodeRef} className="todo-slide-item">
+                                      <Card variant="ghost" size="2">
+                                        <Flex justify="between" align="center" gap="4">
+                                          <Flex align="center" gap="3" asChild>
+                                            <label>
+                                              <Checkbox
+                                                checked={todo.completed}
+                                                onCheckedChange={() => handleToggle(todo.id)}
+                                                size="3"
+                                              />
+                                              <Text
+                                                size="3"
+                                                style={{
+                                                  textDecoration: todo.completed
+                                                    ? "line-through"
+                                                    : "none",
+                                                  opacity: todo.completed ? 0.6 : 1,
+                                                }}
+                                              >
+                                                {todo.text}
+                                              </Text>
+                                            </label>
+                                          </Flex>
+                                          <Flex align="center" gap="3" wrap="wrap">
+                                            <Text size="2" color="gray">
+                                              {new Intl.DateTimeFormat(undefined, {
+                                                hour: "numeric",
+                                                minute: "2-digit",
+                                              }).format(todo.createdAt)}
+                                            </Text>
+                                            <AlertDialog.Root>
+                                              <AlertDialog.Trigger>
+                                                <Button
+                                                  size="2"
+                                                  variant="soft"
+                                                  color="red"
+                                                >
+                                                  Remove
+                                                </Button>
+                                              </AlertDialog.Trigger>
+                                              <AlertDialog.Content maxWidth="360px">
+                                                <AlertDialog.Title>Remove todo?</AlertDialog.Title>
+                                                <AlertDialog.Description size="2" color="gray">
+                                                  This action can&apos;t be undone. The item will be removed from
+                                                  your todo list.
+                                                </AlertDialog.Description>
+                                                <Flex gap="2" justify="end" mt="4">
+                                                  <AlertDialog.Cancel>
+                                                    <Button variant="soft" color="gray">
+                                                      Cancel
+                                                    </Button>
+                                                  </AlertDialog.Cancel>
+                                                  <AlertDialog.Action>
+                                                    <Button
+                                                      variant="solid"
+                                                      color="red"
+                                                      onClick={() => handleDelete(todo.id)}
+                                                    >
+                                                      Remove
+                                                    </Button>
+                                                  </AlertDialog.Action>
+                                                </Flex>
+                                              </AlertDialog.Content>
+                                            </AlertDialog.Root>
+                                          </Flex>
+                                        </Flex>
+                                      </Card>
+                                    </div>
+                                  </CSSTransition>
+                                );
+                              })
+                            )}
+                          </TransitionGroup>
+                        </Box>
                       </Flex>
 
                       {stats.completed > 0 && (
@@ -303,8 +377,9 @@ export default function TodoPage() {
                         </Flex>
                       )}
                     </Flex>
-                  </Tabs.Content>
-                ))}
+                    </Tabs.Content>
+                  );
+                })}
               </Box>
             </Tabs.Root>
           </Flex>
