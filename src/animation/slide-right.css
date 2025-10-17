@@ -1,0 +1,42 @@
+.box {
+    width: 120px;
+    height: 60px;
+    background: #4a90e2;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    border-radius: 8px;
+}
+
+/* Enter animation (shift in from left to right) */
+/* Ensure animated elements are positioned relative to allow transforms */
+.slide-enter,
+.slide-enter-active,
+.slide-exit,
+.slide-exit-active {
+    position: relative;
+}
+.slide-enter {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+
+.slide-enter-active {
+    transform: translateX(0);
+    opacity: 1;
+    transition: transform 500ms ease-out, opacity 300ms ease-out;
+}
+
+/* Exit animation (shift out to the right) */
+.slide-exit {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.slide-exit-active {
+    transform: translateX(100%);
+    opacity: 0;
+    transition: transform 500ms ease-in, opacity 300ms ease-in;
+}

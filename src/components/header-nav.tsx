@@ -17,8 +17,11 @@ import {
   faShieldHalved,
   faUser,
   faXmark,
+  faMoon,
+  faSun,
 } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../app/auth-context";
+import { useColorScheme } from "../app/color-scheme-context";
 
 type BaseLink = {
   href: string;
@@ -77,6 +80,7 @@ export function HeaderNav() {
   const { authState, logout } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
+  const { scheme, toggleScheme } = useColorScheme();
 
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>(() => {
@@ -147,12 +151,23 @@ export function HeaderNav() {
       >
         <div className="flex h-full flex-col px-4 py-6">
           <div className="flex items-center justify-between">
-            <Link
-              href="/"
-              className="text-lg font-semibold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            >
-              FocusFlow
-            </Link>
+            <div className="flex items-center gap-2">
+              <Link
+                href="/"
+                className="text-lg font-semibold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              >
+                FocusFlow
+              </Link>
+              <button
+                type="button"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                onClick={toggleScheme}
+                aria-label={scheme === "light" ? "Switch to dark mode" : "Switch to light mode"}
+                title={scheme === "light" ? "Switch to dark mode" : "Switch to light mode"}
+              >
+                <FontAwesomeIcon icon={scheme === "light" ? faMoon : faSun} />
+              </button>
+            </div>
             <button
               type="button"
               className="flex h-9 w-9 items-center justify-center rounded-md bg-white/10 text-white transition hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:hidden"

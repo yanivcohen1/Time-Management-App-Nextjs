@@ -9,8 +9,13 @@
   --font-mono: var(--font-geist-mono);
 }
 
+:root[data-theme="dark"] {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}
+
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme]) {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
@@ -24,13 +29,54 @@ body {
 body {
   margin: 0;
   background:
-    radial-gradient(circle at top, rgba(59, 130, 246, 0.12), transparent 55%),
-    linear-gradient(180deg, rgba(15, 23, 42, 0.08), transparent 35%),
-    var(--background);
+    radial-gradient(circle at 20% 0, rgba(37, 99, 235, 0.25), transparent 55%),
+    linear-gradient(160deg, rgba(15, 23, 42, 0.9), rgba(37, 99, 235, 0.75)),
+    #0b1120;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
   display: flex;
   flex-direction: column;
+}
+
+body[data-theme="light"],
+body[data-theme="dark"] {
+  background:
+    radial-gradient(circle at 20% 0, rgba(37, 99, 235, 0.25), transparent 55%),
+    linear-gradient(160deg, rgba(15, 23, 42, 0.9), rgba(37, 99, 235, 0.75)),
+    #0b1120;
+}
+
+.rt-Container {
+  background-color: transparent;
+}
+
+.rt-Theme, .rt-Theme[data-radius] {
+  background-color: transparent !important;
+}
+
+body[data-theme="dark"] .rt-Card[data-variant="surface"] {
+  background: rgba(12, 18, 36, 0.88);
+  border-color: rgba(59, 130, 246, 0.25);
+  backdrop-filter: blur(12px);
+}
+
+body[data-theme="dark"] .rt-Card[data-variant="surface"] .rt-Text,
+body[data-theme="dark"] .rt-Card[data-variant="surface"] .rt-Heading {
+  color: rgba(226, 232, 240, 0.95);
+}
+
+body[data-theme="light"] .rt-Card[data-variant="surface"],
+body:not([data-theme]) .rt-Card[data-variant="surface"] {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(8px);
+}
+
+body[data-theme="light"] .rt-Card[data-variant="surface"] .rt-Text,
+body[data-theme="light"] .rt-Card[data-variant="surface"] .rt-Heading,
+body:not([data-theme]) .rt-Card[data-variant="surface"] .rt-Text,
+body:not([data-theme]) .rt-Card[data-variant="surface"] .rt-Heading {
+  color: rgba(30, 41, 59, 0.95);
 }
 
 .collapsible-content[data-state="open"] {

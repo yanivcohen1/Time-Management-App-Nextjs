@@ -456,7 +456,8 @@ export default function Home() {
               top: selectBoxOnTop ? "16px" : "auto",
               left: "50%",
               transform: "translateX(-50%)",
-              backgroundColor: "var(--color-surface)",
+              backgroundColor: "var(--color-background)",
+              border: "1px solid var(--accent-a4)",
               padding: "16px",
               boxShadow: selectBoxOnTop
                 ? "0 2px 5px rgba(0,0,0,0.3)"
