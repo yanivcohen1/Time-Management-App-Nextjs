@@ -363,25 +363,25 @@ export default function TodoPage() {
                           </TransitionGroup>
                         </Box>
                       </Flex>
-
-                      {stats.completed > 0 && (
-                        <Flex justify="end">
-                          <Button
-                            variant="outline"
-                            color="gray"
-                            size="2"
-                            onClick={handleClearCompleted}
-                          >
-                            Clear completed ({stats.completed})
-                          </Button>
-                        </Flex>
-                      )}
                     </Flex>
                     </Tabs.Content>
                   );
                 })}
               </Box>
             </Tabs.Root>
+
+            {stats.completed > 0 && (
+              <Flex justify="end">
+                <Button
+                  variant="outline"
+                  color="gray"
+                  size="2"
+                  onClick={handleClearCompleted}
+                >
+                  Clear completed ({stats.completed})
+                </Button>
+              </Flex>
+            )}
           </Flex>
         </Card>
       </Flex>
