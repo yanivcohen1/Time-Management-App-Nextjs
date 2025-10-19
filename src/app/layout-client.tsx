@@ -25,10 +25,13 @@ function LayoutContainer({ children }: PropsWithChildren) {
 
   return (
     <AuthProvider>
-  <div className="relative min-h-screen bg-transparent text-[var(--foreground)] md:pl-64">
+      <div
+        data-page-shell
+        className="relative min-h-screen bg-transparent text-[var(--foreground)] md:pl-64"
+      >
         <LoadingBar color="var(--accent-9)" ref={loadingBarRef} shadow={true} />
         <HeaderNav />
-  <main className="min-h-screen bg-transparent pt-16 transition-[padding] duration-200 md:pt-0">
+        <main className="min-h-screen bg-transparent pt-16 transition-[padding] duration-200 md:pt-0">
           {children}
         </main>
       </div>
