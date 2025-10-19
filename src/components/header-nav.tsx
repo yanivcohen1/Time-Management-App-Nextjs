@@ -135,7 +135,7 @@ export function HeaderNav() {
       {!isMobileOpen ? (
         <button
           type="button"
-          className="fixed top-4 left-4 z-50 flex h-10 w-10 items-center justify-center rounded-md bg-slate-950 text-slate-200 shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:hidden"
+          className="fixed top-4 left-4 z-[110] flex h-10 w-10 items-center justify-center rounded-md bg-slate-950 text-slate-200 shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:hidden"
           aria-label="Open navigation"
           aria-expanded={isMobileOpen}
           onClick={toggleMobileNav}
@@ -145,7 +145,7 @@ export function HeaderNav() {
       ) : null}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex w-56 transform flex-col bg-slate-950/95 text-slate-100 shadow-xl transition-transform duration-200 ease-out md:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-[110] flex w-56 transform flex-col bg-slate-950/95 text-slate-100 shadow-xl transition-transform duration-200 ease-out md:translate-x-0 ${
           isMobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -304,7 +304,7 @@ export function HeaderNav() {
 
       {isMobileOpen ? (
         <div
-          className="fixed inset-0 z-30 bg-black/50 backdrop-blur-sm md:hidden"
+          className="fixed inset-0 z-[105] bg-black/50 backdrop-blur-sm md:hidden"
           aria-hidden="true"
           onClick={() => setIsMobileOpen(false)}
         />
