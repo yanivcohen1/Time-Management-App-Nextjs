@@ -2,7 +2,7 @@
 
 import { ReactNode, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Box, Card, Container, Flex, Heading, Text } from "@radix-ui/themes";
+import { Card, Container, Flex, Heading, Text } from "@radix-ui/themes";
 import { Role, useAuth } from "../app/auth-context";
 
 interface ProtectedPageProps {
@@ -46,14 +46,14 @@ export function ProtectedPage({ allowedRoles, title, subtitle, children }: Prote
   return (
     <Container size="3" py={{ initial: "5", sm: "7" }}>
       <Flex direction="column" gap="6">
-        <Box>
+        <Card size="3" variant="surface">
           <Heading size="7">{title}</Heading>
           {subtitle && (
             <Text size="3" color="gray">
               {subtitle}
             </Text>
           )}
-        </Box>
+        </Card>
         <Card size="3" variant="surface">
           {children}
         </Card>
