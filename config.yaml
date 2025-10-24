@@ -1,0 +1,3 @@
+port: 3000
+jwtSecret: "focusflow-dev-secret-change-me"
+dbPath: "data/focusflow.db"

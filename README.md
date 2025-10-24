@@ -1,17 +1,22 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Authentication & API
+## Configuration
 
-- Credentials are sourced from a local SQLite database that is seeded on first run (default users: `user/user123`, `admin/admin123`).
-- Sign-in requests hit `POST /api/auth/login`, which issues a short-lived JWT (1h default) saved to `localStorage` by the global Axios interceptor.
-- Protected routes, including `POST /api/users`, require the `Authorization: Bearer <token>` header and will return `401` if the token is missing or expired.
+The application loads configuration from `config.yaml` in the project root. This YAML file contains the following settings:
+
+- `port`: The port number for the development server (default: 3000)
+- `jwtSecret`: Secret used to sign JWTs
+- `dbPath`: Path to the SQLite database file
+
+These values are automatically loaded at startup and set as environment variables. You can edit `config.yaml` to customize them, or override with environment variables if preferred.
 
 ### Environment variables
 
 | Variable | Purpose | Default |
 | --- | --- | --- |
-| `FOCUSFLOW_DB_PATH` | Absolute/relative path to the SQLite database file. | `<project>/data/focusflow.db` |
-| `FOCUSFLOW_JWT_SECRET` | Secret used to sign JWTs. | `focusflow-dev-secret-change-me` (override in production) |
+| `PORT` | Port for the development server. | 3000 (from config.yaml) |
+| `FOCUSFLOW_DB_PATH` | Absolute/relative path to the SQLite database file. | `<project>/data/focusflow.db` (from config.yaml) |
+| `FOCUSFLOW_JWT_SECRET` | Secret used to sign JWTs. | `focusflow-dev-secret-change-me` (from config.yaml, override in production) |
 | `FOCUSFLOW_JWT_EXPIRES_IN` | Expiry passed to `jsonwebtoken` (`1h`, `30m`, etc.). | `1h` |
 
 The database directory is created automatically; database files are git-ignored.
