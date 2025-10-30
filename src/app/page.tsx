@@ -117,6 +117,7 @@ export default function Home() {
   const isAuthenticated = authState.status === "authenticated";
   const role = isAuthenticated ? authState.user.role : undefined;
   const toastRef = useRef<Toast | null>(null);
+  const toastTopRef = useRef<Toast | null>(null);
   const [showSelectBox, setShowSelectBox] = useState(false);
   const [selectedOption, setSelectedOption] = useState("one");
   const [confirmedOption, setConfirmedOption] = useState<string | null>(null);
@@ -132,7 +133,7 @@ export default function Home() {
   const handleMockRequest = useCallback(async () => {
     try {
       const { data } = await axios.get<{ message: string }>("/api/data");
-      toastRef.current?.show({
+      toastTopRef.current?.show({
         severity: "success",
         summary: "Mock response received",
         detail: data.message,
@@ -141,7 +142,7 @@ export default function Home() {
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Unexpected error occurred";
-      toastRef.current?.show({
+      toastTopRef.current?.show({
         severity: "error",
         summary: "Request failed",
         detail: message,
@@ -153,12 +154,28 @@ export default function Home() {
   const handleStickyAnswer = useCallback((answer: "Yes" | "No") => {
     setStickyAnswer(answer);
     setIsStickyVisible(false);
+    if (answer === "Yes") {
+      toastRef.current?.show({
+        severity: "success",
+        summary: "Save Success",
+        detail: "",
+        life: 2000,
+      });
+    } else {
+      toastRef.current?.show({
+        severity: "error",
+        summary: "Save Dismiss",
+        detail: "",
+        life: 2000,
+      });
+    }
   }, []);
 
   return (
     <Container size="3" py={{ initial: "5", sm: "7" }}>
   <Flex direction="column" gap="1">
-        <Toast ref={toastRef} position="top-right" />
+        <Toast ref={toastRef} position="bottom-center" />
+        <Toast ref={toastTopRef} position="top-right" />
     <Card size="3" variant="surface">
           <Flex
             direction={{ initial: "column", sm: "row" }}
