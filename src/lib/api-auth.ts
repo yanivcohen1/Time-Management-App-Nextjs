@@ -51,7 +51,7 @@ export function requireAuth(
 
 export function withAuth<T>(handler: AuthedHandler<T>, options?: RequireAuthOptions) {
   return async function (req: NextRequest): Promise<T | MaybeResponse> {
-    const result = requireAuth(req, options ?? { roles: ["user"] });
+    const result = requireAuth(req, options ?? { roles: ["user", "admin"] });
     if ("response" in result) {
       return result.response;
     }
