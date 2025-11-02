@@ -50,9 +50,7 @@ export default function UserPage() {
         if (cancelled) {
           return;
         }
-
-        usersRequestRef.current = null;
-
+      /* usersRequestRef.current = null;
         const message =
           error instanceof Error ? error.message : "Unexpected error occurred";
         toastRef.current?.show({
@@ -60,7 +58,7 @@ export default function UserPage() {
           summary: "Failed to load users",
           detail: message,
           life: 3000,
-        });
+        }); */
       });
 
     return () => {

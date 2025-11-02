@@ -12,9 +12,9 @@ const users: User[] = [
   { id: 2, name: "Bob", email: "bob@example.com" },
 ];
 
-export async function GET() {
+export const GET = withAuth(async (req: NextRequest) => {
   return NextResponse.json(users);
-}
+}, { roles: ["admin"] }); // if not set default is { roles: ["user"] }
 
 export const POST = withAuth(async (req: NextRequest) => {
   const body = await req.json();
