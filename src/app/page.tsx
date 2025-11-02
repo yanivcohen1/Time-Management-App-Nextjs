@@ -112,6 +112,21 @@ const ThemedDropdownTrigger = DropdownMenu.Trigger as unknown as (
   props: ComponentProps<typeof DropdownMenu.Trigger> & { asChild?: boolean }
 ) => ReactElement;
 
+type User = {
+  id: number;
+  name: string;
+  email: string;
+};
+
+async function getUsers(): Promise<User[]> {
+  const res = await axios.get<User[]>("/api/admin", {
+    headers: {
+      "Cache-Control": "no-store",
+    },
+  });
+  return res.data;
+}
+
 export default function Home() {
   const { authState } = useAuth();
   const isAuthenticated = authState.status === "authenticated";
@@ -129,16 +144,27 @@ export default function Home() {
   const [savePopoverChoice, setSavePopoverChoice] = useState<string | null>(
     null
   );
+  const [isAdminMode, setIsAdminMode] = useState(false);
 
   const handleMockRequest = useCallback(async () => {
     try {
-      const { data } = await axios.get<{ message: string }>("/api/data");
-      toastTopRef.current?.show({
-        severity: "success",
-        summary: "Mock response received",
-        detail: data.message,
-        life: 2000,
-      });
+      if (isAdminMode) {
+        const users = await getUsers();
+        toastTopRef.current?.show({
+          severity: "success",
+          summary: "Users fetched",
+          detail: `Fetched ${users.length} users`,
+          life: 2000,
+        });
+      } else {
+        const { data } = await axios.get<{ message: string }>("/api/data");
+        toastTopRef.current?.show({
+          severity: "success",
+          summary: "Mock response received",
+          detail: data.message,
+          life: 2000,
+        });
+      }
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Unexpected error occurred";
@@ -149,7 +175,7 @@ export default function Home() {
         life: 3000,
       });
     }
-  }, []);
+  }, [isAdminMode]);
 
   const handleStickyAnswer = useCallback((answer: "Yes" | "No") => {
     setStickyAnswer(answer);
@@ -294,6 +320,23 @@ export default function Home() {
               <Button size="3" variant="solid" onClick={handleMockRequest}>
                 Fetch mock data
               </Button>
+              <Flex align="center" gap="2">
+                <Checkbox
+                  checked={isAdminMode}
+                  onCheckedChange={(checked) =>
+                    setIsAdminMode(checked === true)
+                  }
+                  id="admin-mode"
+                />
+                <Text
+                  asChild
+                  size="2"
+                  color="gray"
+                  style={{ cursor: "pointer" }}
+                >
+                  <label htmlFor="admin-mode">Admin mode</label>
+                </Text>
+              </Flex>
               <Button
                 size="3"
                 variant="soft"

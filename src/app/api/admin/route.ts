@@ -14,7 +14,7 @@ const users: User[] = [
 
 export const GET = withAuth(async (req: NextRequest) => {
   return NextResponse.json(users);
-}); // if not set default is { roles: ["user"] }
+}, { roles: ["admin"] }); // if not set default is { roles: ["user"] }
 
 export const POST = withAuth(async (req: NextRequest) => {
   const body = await req.json();
