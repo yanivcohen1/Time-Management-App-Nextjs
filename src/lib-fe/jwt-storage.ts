@@ -1,4 +1,4 @@
-const JWT_STORAGE_KEY = "focusflow.jwt";
+const JWT_STORAGE_KEY = "jwt";
 
 function isBrowser() {
   return typeof window !== "undefined" && typeof window.localStorage !== "undefined";
