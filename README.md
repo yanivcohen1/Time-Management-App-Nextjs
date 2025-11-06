@@ -84,11 +84,11 @@ src/
 
 ## Available Scripts
 
-- `yarn dev`: Starts the development server with Turbopack.
-- `yarn build`: Builds the application for production.
-- `yarn start`: Starts the production server.
-- `yarn lint`: Runs ESLint to check code quality.
-- `yarn test`: Runs the test suite.
+- `pnpm dev`: Starts the development server with Turbopack.
+- `pnpm build`: Builds the application for production.
+- `pnpm start`: Starts the production server.
+- `pnpm lint`: Runs ESLint to check code quality.
+- `pnpm test`: Runs the test suite.
 
 ## Learn More
 
