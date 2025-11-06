@@ -1,12 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button, Flex, Heading, Separator, Text } from "@radix-ui/themes";
 import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { BreadCrumb } from "primereact/breadcrumb";
-import type { MenuItem } from "primereact/menuitem";
 import { Toast } from "primereact/toast";
 import { ProtectedPage } from "../../components/protected-page";
 import AddUserForm from "../AddUserForm";
@@ -27,8 +24,7 @@ async function getUsers(): Promise<User[]> {
 }
 
 export default function UserPage() {
-  const router = useRouter();
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible] = useState(true);
   const [users, setUsers] = useState<User[]>([]);
   const toastRef = useRef<Toast | null>(null);
   const usersRequestRef = useRef<Promise<User[]> | null>(null);
@@ -45,55 +41,12 @@ export default function UserPage() {
         if (!cancelled) {
           setUsers(data);
         }
-      })
-      .catch((error) => {
-        if (cancelled) {
-          return;
-        }
-      /* usersRequestRef.current = null;
-        const message =
-          error instanceof Error ? error.message : "Unexpected error occurred";
-        toastRef.current?.show({
-          severity: "error",
-          summary: "Failed to load users",
-          detail: message,
-          life: 3000,
-        }); */
       });
 
     return () => {
       cancelled = true;
     };
   }, []);
-
-  const breadcrumbItems: MenuItem[] = useMemo(
-    () => [
-      {
-        label: "User",
-        icon: "pi pi-home",
-        command: () => {
-          setIsVisible(true);
-          router.push("/user");
-        },
-      },
-      {
-        label: "inter",
-        command: () => {
-          setIsVisible(false);
-          router.push("/user/inter/2?id=3&name=tam");
-        },
-      },
-    ],
-    [router]
-  );
-
-  const home: MenuItem = useMemo(
-    () => ({
-      icon: "pi pi-home",
-      url: "/",
-    }),
-    []
-  );
 
   return (
     <>

@@ -57,7 +57,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         },
       },
     ],
-    [setActiveView]
+    [setActiveView, router]
   );
 
   const home: MenuItem = useMemo(

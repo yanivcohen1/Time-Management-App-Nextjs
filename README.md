@@ -1,3 +1,5 @@
+# React + TypeScript + Next.js App
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Configuration
@@ -40,6 +42,53 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+
+## Features
+
+- **Next.js App Router**: Utilizes the latest App Router for server-side rendering and routing.
+- **TypeScript**: Full TypeScript support for type safety and better development experience.
+- **Authentication**: Role-based authentication with JWT tokens, supporting user and admin roles.
+- **Todo Management**: FocusFlow todo dashboard with CRUD operations for tasks.
+- **UI Design System**: Radix UI components with Tailwind CSS v4 for modern, accessible interfaces.
+- **Database**: SQLite integration for data persistence.
+- **Protected Routes**: Role-aware access control for pages like admin and user dashboards.
+- **Quick Links**: Dynamic deep links for user interactions.
+
+## Project Structure
+
+```
+src/
+├── app/                    # Next.js App Router pages
+│   ├── admin/              # Admin-only pages
+│   ├── api/                # API routes
+│   ├── login/              # Login page
+│   ├── todo/               # Todo dashboard
+│   ├── user/               # User workspace and quick links
+│   ├── auth-context.tsx    # Client-side auth state
+│   ├── globals.css         # Global styles and Tailwind imports
+│   ├── layout.tsx          # Root layout
+│   └── page.tsx            # Home page
+├── components/             # Reusable UI components
+│   ├── header-nav.tsx      # Navigation header
+│   ├── protected-page.tsx  # Access control wrapper
+│   └── global-toast-provider.tsx  # Toast notifications
+├── data/                   # Static data files
+├── hooks/                  # Custom React hooks
+├── lib/                    # Server-side utilities
+│   ├── db.ts               # Database connection
+│   ├── auth-server.ts      # Server auth helpers
+│   └── api-auth.ts         # API authentication
+└── lib-fe/                 # Client-side utilities
+    └── jwt-storage.ts      # JWT storage helpers
+```
+
+## Available Scripts
+
+- `yarn dev`: Starts the development server with Turbopack.
+- `yarn build`: Builds the application for production.
+- `yarn start`: Starts the production server.
+- `yarn lint`: Runs ESLint to check code quality.
+- `yarn test`: Runs the test suite.
 
 ## Learn More
 

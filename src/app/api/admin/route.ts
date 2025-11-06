@@ -12,6 +12,7 @@ const users: User[] = [
   { id: 2, name: "Bob", email: "bob@example.com" },
 ];
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const GET = withAuth(async (req: NextRequest) => {
   return NextResponse.json(users);
 }, { roles: ["admin"] }); // if not set default is { roles: ["user"] }
