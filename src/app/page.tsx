@@ -112,14 +112,14 @@ const ThemedDropdownTrigger = DropdownMenu.Trigger as unknown as (
   props: ComponentProps<typeof DropdownMenu.Trigger> & { asChild?: boolean }
 ) => ReactElement;
 
-type User = {
+type User = { // {id: 2, username: "admin", role: "admin"}
   id: number;
-  name: string;
-  email: string;
+  username: string;
+  role: string;
 };
 
-async function getUsers(): Promise<User[]> {
-  const res = await axios.get<User[]>("/api/admin", {
+async function getUsers(): Promise<User> {
+  const res = await axios.get<User>("/api/admin", {
     headers: {
       "Cache-Control": "no-store",
     },
@@ -152,8 +152,8 @@ export default function Home() {
         const users = await getUsers();
         toastTopRef.current?.show({
           severity: "success",
-          summary: "Users fetched",
-          detail: `Fetched ${users.length} users`,
+          summary: "current User fetched",
+          detail: `User: ${users.username} - Role: ${users.role}`,
           life: 2000,
         });
       } else {
