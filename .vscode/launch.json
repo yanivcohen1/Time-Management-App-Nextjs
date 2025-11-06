@@ -1,0 +1,28 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Next.js: full stack",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "pnpm dev",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "NODE_OPTIONS": "--inspect"
+            },
+            "serverReadyAction": {
+                "pattern": "Local:\\s+(https?://\\S+)",
+                "uriFormat": "%s",
+                "action": "debugWithChrome"
+            }
+        },
+        {
+            "name": "Debug Next.js: client-side",
+            "type": "chrome",
+            "request": "launch",// first you need "pnpm dev" in cmd
+            "url": "http://localhost:3000", 
+            "sourceMaps": true,
+            "webRoot": "${workspaceFolder}/src"
+        }
+    ]
+}
