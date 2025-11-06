@@ -22,5 +22,8 @@ test('renders welcome message', () => {
       <Home />
     </Theme>
   );
+  // const button = screen.getByTestId('my-button'); // <button data-testid="my-button" ...>
+  // expect(button).toBeInTheDocument();
+
   expect(screen.getByText('Welcome to FocusFlow')).toBeInTheDocument();
 });
