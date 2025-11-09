@@ -10,6 +10,8 @@ import {
   useState,
 } from "react";
 import { Theme } from "@radix-ui/themes";
+import { useTheme as applyPrimeTheme } from "@primeuix/themes";
+import Lara from "@primeuix/themes/lara";
 
 export type ColorScheme = "light" | "dark";
 
@@ -20,6 +22,15 @@ type ColorSchemeContextValue = {
 };
 
 const STORAGE_KEY = "focusflow-color-scheme";
+
+const PRIME_THEME_CONFIG = {
+  preset: Lara,
+  options: {
+    prefix: "p",
+    darkModeSelector: "[data-theme='dark']",
+    cssLayer: true,
+  },
+};
 
 const ColorSchemeContext = createContext<ColorSchemeContextValue | undefined>(
   undefined
@@ -60,7 +71,11 @@ export function ColorSchemeProvider({ children }: PropsWithChildren) {
 
     window.localStorage.setItem(STORAGE_KEY, scheme);
     document.documentElement.dataset.theme = scheme;
-    document.body.dataset.theme = scheme;
+    if (document.body) {
+      document.body.dataset.theme = scheme;
+    }
+
+    applyPrimeTheme(PRIME_THEME_CONFIG);
   }, [scheme]);
 
   const toggleScheme = useCallback(() => {

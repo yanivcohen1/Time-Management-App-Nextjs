@@ -13,6 +13,7 @@
     "@fortawesome/fontawesome-svg-core": "^7.0.1",
     "@fortawesome/free-solid-svg-icons": "^7.0.1",
     "@fortawesome/react-fontawesome": "^3.0.2",
+    "@primeuix/themes": "^1.2.5",
     "@radix-ui/themes": "^3.2.1",
     "axios": "^1.12.0",
     "axios-mock-adapter": "^2.1.0",
@@ -27,7 +28,8 @@
     "react-dom": "19.1.0",
     "react-sticky-el": "^2.1.1",
     "react-top-loading-bar": "^3.0.2",
-    "react-transition-group": "^4.4.5"
+    "react-transition-group": "^4.4.5",
+    "tailwindcss-primeui": "^0.6.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
