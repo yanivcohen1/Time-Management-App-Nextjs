@@ -1,4 +1,6 @@
-# React + TypeScript + Next.js App
+# Time Management App
+## React + TypeScript + Next.js
+## Radix UI components with Tailwind CSS v4
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
@@ -106,7 +108,7 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
 
-## sqlite commands
+## Sqlite Commands
 ```bash
 # connect SQLite
 sqlite3 data/focusflow.db
