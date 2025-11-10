@@ -1,5 +1,5 @@
 # Time Management App
-## React + TypeScript + Next.js
+## TypeScript + Next.js
 ## Radix UI components with Tailwind CSS v4
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
