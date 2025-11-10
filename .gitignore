@@ -43,3 +43,4 @@ yarn-error.log*
 next-env.d.ts
 data/focusflow.db-shm
 data/focusflow.db-wal
+.github/
