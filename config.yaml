@@ -1,3 +1,7 @@
 port: 3000
 jwtSecret: "focusflow-dev-secret-change-me"
-dbPath: "data/focusflow.db"
+dbProvider: "mongo" # "mongo" or "sql"
+dbPath:
+  sql: "data/focusflow.db"
+  mongo: "mongodb://localhost:27017/focusflow"
+logLevel: "info" # "debug", "info", "warn", "error"

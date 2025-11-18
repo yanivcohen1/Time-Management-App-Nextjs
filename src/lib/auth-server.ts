@@ -31,7 +31,7 @@ export async function authenticateCredentials(usernameRaw: string, password: str
     return null;
   }
 
-  const userRow = getUserByUsername(username);
+  const userRow = await getUserByUsername(username);
   if (!userRow) {
     return null;
   }

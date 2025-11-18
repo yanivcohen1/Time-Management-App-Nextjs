@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { withAuth } from "@/lib/api-auth";
-import { verifyToken, type AuthenticatedUser, type Role } from "@/lib/auth-server";
+import { type AuthenticatedUser } from "@/lib/auth-server";
 
 type User = {
   id: number;
@@ -13,9 +13,9 @@ const users: User[] = [
   { id: 2, name: "Bob", email: "bob@example.com" },
 ];
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const GET = withAuth(async (req: NextRequest, user: AuthenticatedUser) => {
-  return NextResponse.json(user);
+  const requestOrigin = req.headers.get("origin") ?? "unknown";
+  return NextResponse.json({ user, requestOrigin });
 }, { roles: ["admin"] }); // if not set default is { roles: ["user"] }
 
 export const POST = withAuth(async (req: NextRequest) => {

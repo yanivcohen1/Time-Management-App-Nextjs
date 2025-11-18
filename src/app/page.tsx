@@ -40,6 +40,7 @@ import MockAdapter from "axios-mock-adapter";
 import { Toast } from "primereact/toast";
 import { useAuth } from "./auth-context";
 import Sticky from "react-sticky-el";
+import { readJwtToken } from "@/lib-fe/jwt-storage";
 
 type MenuItem = {
   slug?: string;
@@ -112,19 +113,24 @@ const ThemedDropdownTrigger = DropdownMenu.Trigger as unknown as (
   props: ComponentProps<typeof DropdownMenu.Trigger> & { asChild?: boolean }
 ) => ReactElement;
 
-type User = { // {id: 2, username: "admin", role: "admin"}
+type User = {
   id: number;
   username: string;
   role: string;
 };
 
-async function getUsers(): Promise<User> {
-  const res = await axios.get<User>("/api/admin", {
+type AdminResponse = {
+  user: User;
+};
+
+async function fetchAdminUser(token: string): Promise<User> {
+  const res = await axios.get<AdminResponse>("/api/admin", {
     headers: {
       "Cache-Control": "no-store",
+      Authorization: `Bearer ${token}`,
     },
   });
-  return res.data;
+  return res.data.user;
 }
 
 export default function Home() {
@@ -149,11 +155,32 @@ export default function Home() {
   const handleMockRequest = useCallback(async () => {
     try {
       if (isAdminMode) {
-        const users = await getUsers();
+        if (!isAuthenticated) {
+          toastTopRef.current?.show({
+            severity: "warn",
+            summary: "Sign-in required",
+            detail: "Log in as admin to fetch protected data.",
+            life: 2500,
+          });
+          return;
+        }
+
+        const token = readJwtToken();
+        if (!token) {
+          toastTopRef.current?.show({
+            severity: "error",
+            summary: "Missing token",
+            detail: "Please log out/in again to refresh your session.",
+            life: 3000,
+          });
+          return;
+        }
+
+        const user = await fetchAdminUser(token);
         toastTopRef.current?.show({
           severity: "success",
-          summary: "current User fetched",
-          detail: `User: ${users.username} - Role: ${users.role}`,
+          summary: "Current user fetched",
+          detail: `User: ${user.username} - Role: ${user.role}`,
           life: 2000,
         });
       } else {
@@ -175,7 +202,7 @@ export default function Home() {
         life: 3000,
       });
     }
-  }, [isAdminMode]);
+  }, [isAdminMode, isAuthenticated]);
 
   const handleStickyAnswer = useCallback((answer: "Yes" | "No") => {
     setStickyAnswer(answer);

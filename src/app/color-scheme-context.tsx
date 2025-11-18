@@ -36,38 +36,32 @@ const ColorSchemeContext = createContext<ColorSchemeContextValue | undefined>(
   undefined
 );
 
-function resolveInitialScheme(): ColorScheme {
+function readClientScheme(): ColorScheme {
   if (typeof window === "undefined") {
     return "light";
   }
 
   const stored = window.localStorage.getItem(STORAGE_KEY);
   if (stored === "light" || stored === "dark") {
-    if (typeof document !== "undefined") {
-      document.documentElement.dataset.theme = stored;
-      if (document.body) {
-        document.body.dataset.theme = stored;
-      }
-    }
     return stored;
   }
 
   const prefersDark = window.matchMedia?.("(prefers-color-scheme: dark)")?.matches;
-  const resolved = prefersDark ? "dark" : "light";
-  if (typeof document !== "undefined") {
-    document.documentElement.dataset.theme = resolved;
-    if (document.body) {
-      document.body.dataset.theme = resolved;
-    }
-  }
-  return resolved;
+  return prefersDark ? "dark" : "light";
 }
 
 export function ColorSchemeProvider({ children }: PropsWithChildren) {
-  const [scheme, setScheme] = useState<ColorScheme>(() => resolveInitialScheme());
+  const [scheme, setScheme] = useState<ColorScheme>("light");
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    const resolved = readClientScheme();
+    setScheme(resolved);
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !hydrated) return;
 
     window.localStorage.setItem(STORAGE_KEY, scheme);
     document.documentElement.dataset.theme = scheme;
@@ -76,7 +70,7 @@ export function ColorSchemeProvider({ children }: PropsWithChildren) {
     }
 
     applyPrimeTheme(PRIME_THEME_CONFIG);
-  }, [scheme]);
+  }, [scheme, hydrated]);
 
   const toggleScheme = useCallback(() => {
     setScheme((current) => (current === "light" ? "dark" : "light"));

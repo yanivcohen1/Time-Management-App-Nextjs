@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { withAuth } from "@/lib/api-auth";
-import { verifyToken, type AuthenticatedUser, type Role } from "@/lib/auth-server";
+import { type AuthenticatedUser } from "@/lib/auth-server";
 
 type User = {
   id: number;
@@ -13,10 +13,21 @@ const users: User[] = [
   { id: 2, name: "Bob", email: "bob@example.com" },
 ];
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const GET = withAuth(async (req: NextRequest, user: AuthenticatedUser) => {
-  // {user.username, user.role}
-  return NextResponse.json(users);
+  const limitParam = req.nextUrl.searchParams.get("limit");
+  const parsedLimit = limitParam ? Number.parseInt(limitParam, 10) : undefined;
+  const limitedUsers =
+    typeof parsedLimit === "number" && Number.isFinite(parsedLimit) && parsedLimit > 0
+      ? users.slice(0, parsedLimit)
+      : users;
+
+  return NextResponse.json({
+    requestedBy: {
+      username: user.username,
+      role: user.role,
+    },
+    users: limitedUsers,
+  });
 }); // if not set default is { roles: ["user"] }
 
 export const POST = withAuth(async (req: NextRequest) => {

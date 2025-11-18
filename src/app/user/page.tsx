@@ -5,8 +5,10 @@ import { Button, Flex, Heading, Separator, Text } from "@radix-ui/themes";
 import axios from "axios";
 import Link from "next/link";
 import { Toast } from "primereact/toast";
+import { readJwtToken } from "@/lib-fe/jwt-storage";
 import { ProtectedPage } from "../../components/protected-page";
 import AddUserForm from "../AddUserForm";
+import { useAuth } from "../auth-context";
 
 type User = {
   id: number;
@@ -14,13 +16,20 @@ type User = {
   email: string;
 };
 
-async function getUsers(): Promise<User[]> {
-  const res = await axios.get<User[]>("/api/users", {
-    headers: {
-      "Cache-Control": "no-store",
-    },
+type UsersResponse = {
+  users: User[];
+};
+
+async function getUsers(token: string): Promise<User[]> {
+  const headers: Record<string, string> = {
+    "Cache-Control": "no-store",
+    Authorization: `Bearer ${token}`,
+  };
+
+  const res = await axios.get<UsersResponse>("/api/users", {
+    headers,
   });
-  return res.data;
+  return Array.isArray(res.data.users) ? res.data.users : [];
 }
 
 export default function UserPage() {
@@ -28,10 +37,21 @@ export default function UserPage() {
   const [users, setUsers] = useState<User[]>([]);
   const toastRef = useRef<Toast | null>(null);
   const usersRequestRef = useRef<Promise<User[]> | null>(null);
+  const { authState, isHydrated } = useAuth();
+  const isAuthenticated = authState.status === "authenticated";
 
   useEffect(() => {
+    if (!isHydrated || !isAuthenticated) {
+      return;
+    }
+
+    const token = readJwtToken();
+    if (!token) {
+      return;
+    }
+
     if (!usersRequestRef.current) {
-      usersRequestRef.current = getUsers();
+      usersRequestRef.current = getUsers(token);
     }
 
     let cancelled = false;
@@ -46,7 +66,7 @@ export default function UserPage() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [isAuthenticated, isHydrated]);
 
   return (
     <>

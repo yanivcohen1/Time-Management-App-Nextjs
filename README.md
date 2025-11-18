@@ -10,7 +10,11 @@ The application loads configuration from `config.yaml` in the project root. This
 
 - `port`: The port number for the development server (default: 3000)
 - `jwtSecret`: Secret used to sign JWTs
-- `dbPath`: Path to the SQLite database file
+- `dbPath`: Object containing:
+    - `sql`: Path to the SQLite database file
+    - `mongo`: Connection string for the MongoDB database (defaults to `mongodb://localhost:27017/focusflow`)
+- `dbProvider`: Selector for the active database backend (`sql` for SQLite, `mongo` for MongoDB)
+- `logLevel`: Verbosity for server-side logging (`debug`, `info`, `warn`, `error`)
 
 These values are automatically loaded at startup and set as environment variables. You can edit `config.yaml` to customize them, or override with environment variables if preferred.
 
@@ -20,8 +24,13 @@ These values are automatically loaded at startup and set as environment variable
 | --- | --- | --- |
 | `PORT` | Port for the development server. | 3000 (from config.yaml) |
 | `FOCUSFLOW_DB_PATH` | Absolute/relative path to the SQLite database file. | `<project>/data/focusflow.db` (from config.yaml) |
+| `FOCUSFLOW_DB_PROVIDER` | Active database backend. Set to `sql` or `mongo`. | `sql` (from config.yaml) |
+| `FOCUSFLOW_MONGO_URI` | MongoDB connection string. | `mongodb://localhost:27017/focusflow` (from config.yaml) |
+| `FOCUSFLOW_LOG_LEVEL` | Log verbosity for server utilities. | `info` (from config.yaml) |
 | `FOCUSFLOW_JWT_SECRET` | Secret used to sign JWTs. | `focusflow-dev-secret-change-me` (from config.yaml, override in production) |
 | `FOCUSFLOW_JWT_EXPIRES_IN` | Expiry passed to `jsonwebtoken` (`1h`, `30m`, etc.). | `1h` |
+
+Switching `dbProvider` to `mongo` makes the application query MongoDB while retaining the same seeded demo credentials (`user/user123`, `admin/admin123`).
 
 The database directory is created automatically; database files are git-ignored.
 
