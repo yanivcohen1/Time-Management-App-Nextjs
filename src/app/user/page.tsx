@@ -21,14 +21,8 @@ type UsersResponse = {
 };
 
 async function getUsers(token: string): Promise<User[]> {
-  const headers: Record<string, string> = {
-    "Cache-Control": "no-store",
-    Authorization: `Bearer ${token}`,
-  };
 
-  const res = await axios.get<UsersResponse>("/api/users", {
-    headers,
-  });
+  const res = await axios.get<UsersResponse>("/api/users", {});
   return Array.isArray(res.data.users) ? res.data.users : [];
 }
 

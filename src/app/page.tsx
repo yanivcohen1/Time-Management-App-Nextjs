@@ -124,12 +124,7 @@ type AdminResponse = {
 };
 
 async function fetchAdminUser(token: string): Promise<User> {
-  const res = await axios.get<AdminResponse>("/api/admin", {
-    headers: {
-      "Cache-Control": "no-store",
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const res = await axios.get<AdminResponse>("/api/admin", {});
   return res.data.user;
 }
 
