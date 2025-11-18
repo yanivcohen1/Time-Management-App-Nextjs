@@ -18,6 +18,15 @@ The application loads configuration from `config.yaml` in the project root. This
 
 These values are automatically loaded at startup and set as environment variables. You can edit `config.yaml` to customize them, or override with environment variables if preferred.
 
+### Database providers
+
+The app can run on either SQLite or MongoDB:
+
+- Set `dbProvider` to `sql` to use the local SQLite file defined by `dbPath.sql`.
+- Set `dbProvider` to `mongo` to point to the Mongo connection string in `dbPath.mongo` (compatible with MongoDB 3.6+).
+
+Regardless of provider, the app seeds the same demo accounts (`user/user123`, `admin/admin123`). Existing Mongo records are automatically normalized the next time the server starts, so you can toggle between providers without manually clearing collections.
+
 ### Environment variables
 
 | Variable | Purpose | Default |
@@ -31,6 +40,13 @@ These values are automatically loaded at startup and set as environment variable
 | `FOCUSFLOW_JWT_EXPIRES_IN` | Expiry passed to `jsonwebtoken` (`1h`, `30m`, etc.). | `1h` |
 
 Switching `dbProvider` to `mongo` makes the application query MongoDB while retaining the same seeded demo credentials (`user/user123`, `admin/admin123`).
+
+### Demo credentials & auth flow
+
+- `user / user123`: standard user with access to the todo workspace.
+- `admin / admin123`: administrator with access to `/admin` and admin-only API routes.
+
+Logins issue a JWT that is stored client-side. The UI automatically injects this token when calling protected endpoints (e.g., `/api/users`, `/api/admin`), so ensure you are signed in before toggling features such as “Admin mode → Fetch mock data” on the home page.
 
 The database directory is created automatically; database files are git-ignored.
 
@@ -61,7 +77,7 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 - **Authentication**: Role-based authentication with JWT tokens, supporting user and admin roles.
 - **Todo Management**: FocusFlow todo dashboard with CRUD operations for tasks.
 - **UI Design System**: Radix UI components with Tailwind CSS v4 for modern, accessible interfaces.
-- **Database**: SQLite integration for data persistence.
+- **Database**: Dual provider support with SQLite or MongoDB (3.6+ compatible) for persistence.
 - **Protected Routes**: Role-aware access control for pages like admin and user dashboards.
 - **Quick Links**: Dynamic deep links for user interactions.
 
