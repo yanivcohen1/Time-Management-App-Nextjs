@@ -41,6 +41,16 @@ import { Toast } from "primereact/toast";
 import { useAuth } from "./auth-context";
 import Sticky from "react-sticky-el";
 import { readJwtToken } from "@/lib-fe/jwt-storage";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { Calendar as UiCalendar } from "@/components/ui/calendar";
+import { Button as UiButton } from "@/components/ui/button";
+import {
+  Popover as UiPopover,
+  PopoverTrigger as UiPopoverTrigger,
+  PopoverContent as UiPopoverContent,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
 type MenuItem = {
   slug?: string;
@@ -124,7 +134,11 @@ type AdminResponse = {
 };
 
 async function fetchAdminUser(token: string): Promise<User> {
-  const res = await axios.get<AdminResponse>("/api/admin", {});
+  const res = await axios.get<AdminResponse>("/api/admin", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return res.data.user;
 }
 
@@ -138,6 +152,7 @@ export default function Home() {
   const [selectedOption, setSelectedOption] = useState("one");
   const [confirmedOption, setConfirmedOption] = useState<string | null>(null);
   const [selectBoxOnTop, setSelectBoxOnTop] = useState(false);
+  const [scheduledDate, setScheduledDate] = useState<Date | undefined>();
   const [isStickyVisible, setIsStickyVisible] = useState(true);
   const [isCollapsibleOpen, setIsCollapsibleOpen] = useState(false);
   const [stickyAnswer, setStickyAnswer] = useState<string | null>(null);
@@ -461,6 +476,39 @@ export default function Home() {
                 >
                   <label htmlFor="toggle-select-position">Show select box at top</label>
                 </Text>
+              </Flex>
+              <Flex
+                direction={{ initial: "column", sm: "row" }}
+                gap="2"
+                align={{ sm: "center" }}
+                style={{ width: "100%" }}
+              >
+                <Text size="2" color="gray" style={{ minWidth: "100px" }}>
+                  Date Picker
+                </Text>
+                <UiPopover>
+                  <UiPopoverTrigger asChild>
+                    <UiButton
+                      variant="outline"
+                      type="button"
+                      className={cn(
+                        "w-full justify-start text-left font-normal",
+                        !scheduledDate && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {scheduledDate ? format(scheduledDate, "PPP") : "Pick a date"}
+                    </UiButton>
+                  </UiPopoverTrigger>
+                  <UiPopoverContent className="w-auto p-0" align="start">
+                    <UiCalendar
+                      mode="single"
+                      selected={scheduledDate}
+                      onSelect={setScheduledDate}
+                      initialFocus
+                    />
+                  </UiPopoverContent>
+                </UiPopover>
               </Flex>
             </Flex>
           </Flex>

@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tailwindcss-primeui";
+@import "react-day-picker/dist/style.css";
 
 :root {
   --background: #ffffff;
@@ -10,6 +11,26 @@
   --font-mono: var(--font-geist-mono);
   --color-panel: #ffffff;
   --color-panel-solid: #ffffff;
+  --ui-background: 0 0% 100%;
+  --ui-foreground: 240 10% 3.9%;
+  --ui-card: 0 0% 100%;
+  --ui-card-foreground: 240 10% 3.9%;
+  --ui-popover: 0 0% 100%;
+  --ui-popover-foreground: 240 10% 3.9%;
+  --ui-primary: 262 83% 58%;
+  --ui-primary-foreground: 0 0% 100%;
+  --ui-secondary: 240 5% 96%;
+  --ui-secondary-foreground: 240 5.9% 10%;
+  --ui-muted: 240 4.8% 95.9%;
+  --ui-muted-foreground: 240 3.8% 46.1%;
+  --ui-accent: 262 83% 96%;
+  --ui-accent-foreground: 262 83% 30%;
+  --ui-destructive: 0 72% 51%;
+  --ui-destructive-foreground: 0 0% 100%;
+  --ui-border: 240 5.9% 90%;
+  --ui-input: 240 5.9% 90%;
+  --ui-ring: 262 83% 58%;
+  --ui-radius: 0.6rem;
 }
 
 :root[data-theme="dark"] {
@@ -17,6 +38,26 @@
   --foreground: #ededed;
   --color-panel: #1a1a1a;
   --color-panel-solid: #1a1a1a;
+
+  --ui-background: 240 10% 4%;
+  --ui-foreground: 0 0% 98%;
+  --ui-card: 240 10% 4%;
+  --ui-card-foreground: 0 0% 98%;
+  --ui-popover: 240 10% 4%;
+  --ui-popover-foreground: 0 0% 98%;
+  --ui-primary: 262 83% 70%;
+  --ui-primary-foreground: 262 83% 10%;
+  --ui-secondary: 240 3.7% 15.9%;
+  --ui-secondary-foreground: 0 0% 98%;
+  --ui-muted: 240 3.7% 15.9%;
+  --ui-muted-foreground: 240 5% 64.9%;
+  --ui-accent: 262 40% 25%;
+  --ui-accent-foreground: 0 0% 100%;
+  --ui-destructive: 0 62.8% 30.6%;
+  --ui-destructive-foreground: 0 85.7% 97.3%;
+  --ui-border: 240 3.7% 26%;
+  --ui-input: 240 3.7% 26%;
+  --ui-ring: 262 83% 70%;
 
   --text-color: var(--foreground);
   --text-color-secondary: #a3a3a3;
@@ -64,7 +105,48 @@
     --foreground: #ededed;
     --color-panel: #1a1a1a;
     --color-panel-solid: #1a1a1a;
+    --ui-background: 240 10% 4%;
+    --ui-foreground: 0 0% 98%;
+    --ui-card: 240 10% 4%;
+    --ui-card-foreground: 0 0% 98%;
+    --ui-popover: 240 10% 4%;
+    --ui-popover-foreground: 0 0% 98%;
+    --ui-primary: 262 83% 70%;
+    --ui-primary-foreground: 262 83% 10%;
+    --ui-secondary: 240 3.7% 15.9%;
+    --ui-secondary-foreground: 0 0% 98%;
+    --ui-muted: 240 3.7% 15.9%;
+    --ui-muted-foreground: 240 5% 64.9%;
+    --ui-accent: 262 40% 25%;
+    --ui-accent-foreground: 0 0% 100%;
+    --ui-destructive: 0 62.8% 30.6%;
+    --ui-destructive-foreground: 0 85.7% 97.3%;
+    --ui-border: 240 3.7% 26%;
+    --ui-input: 240 3.7% 26%;
+    --ui-ring: 262 83% 70%;
   }
+}
+
+.dark {
+  --ui-background: 240 10% 4%;
+  --ui-foreground: 0 0% 98%;
+  --ui-card: 240 10% 4%;
+  --ui-card-foreground: 0 0% 98%;
+  --ui-popover: 240 10% 4%;
+  --ui-popover-foreground: 0 0% 98%;
+  --ui-primary: 262 83% 70%;
+  --ui-primary-foreground: 262 83% 10%;
+  --ui-secondary: 240 3.7% 15.9%;
+  --ui-secondary-foreground: 0 0% 98%;
+  --ui-muted: 240 3.7% 15.9%;
+  --ui-muted-foreground: 240 5% 64.9%;
+  --ui-accent: 262 40% 25%;
+  --ui-accent-foreground: 0 0% 100%;
+  --ui-destructive: 0 62.8% 30.6%;
+  --ui-destructive-foreground: 0 85.7% 97.3%;
+  --ui-border: 240 3.7% 26%;
+  --ui-input: 240 3.7% 26%;
+  --ui-ring: 262 83% 70%;
 }
 
 html,

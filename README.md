@@ -77,6 +77,7 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 - **Authentication**: Role-based authentication with JWT tokens, supporting user and admin roles.
 - **Todo Management**: FocusFlow todo dashboard with CRUD operations for tasks.
 - **UI Design System**: Radix UI components with Tailwind CSS v4 for modern, accessible interfaces.
+- **shadcn/ui Components**: Shared primitives in `src/components/ui` (button, popover, calendar) enable advanced widgets like the Date Picker showcased on the home page.
 - **Database**: Dual provider support with SQLite or MongoDB (3.6+ compatible) for persistence.
 - **Protected Routes**: Role-aware access control for pages like admin and user dashboards.
 - **Quick Links**: Dynamic deep links for user interactions.
