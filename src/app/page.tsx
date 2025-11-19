@@ -505,6 +505,10 @@ export default function Home() {
                       mode="single"
                       selected={scheduledDate}
                       onSelect={setScheduledDate}
+                      captionLayout="dropdown"
+                      fromYear={2020}
+                      toYear={2035}
+                      defaultMonth={scheduledDate}
                       initialFocus
                     />
                   </UiPopoverContent>
