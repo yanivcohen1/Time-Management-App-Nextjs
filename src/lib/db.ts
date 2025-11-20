@@ -1,8 +1,16 @@
+import "reflect-metadata";
 import DatabaseConstructor, { type Database as DatabaseInstance } from "better-sqlite3";
 import { hashSync } from "bcryptjs";
 import fs from "node:fs";
 import path from "node:path";
-import { MongoClient, type Collection, ObjectId } from "mongodb";
+import {
+  Entity,
+  MikroORM,
+  PrimaryKey,
+  Property,
+  type EntityManager,
+} from "@mikro-orm/core";
+import { MongoDriver, ObjectId } from "@mikro-orm/mongodb";
 
 export type Role = "user" | "admin";
 
@@ -13,10 +21,26 @@ type UserRecord = {
   role: Role;
 };
 
-type MongoUserDocument = UserRecord & {
-  _id?: ObjectId;
-  usernameLower: string;
-};
+@Entity({ collection: "users" })
+class UserEntity {
+  @PrimaryKey({ type: ObjectId })
+  _id!: ObjectId;
+
+  @Property({ unique: true })
+  id!: number;
+
+  @Property()
+  username!: string;
+
+  @Property({ unique: true })
+  usernameLower!: string;
+
+  @Property()
+  password_hash!: string;
+
+  @Property()
+  role!: Role;
+}
 
 const DEFAULT_USERS: Array<{ username: string; password: string; role: Role }> = [
   { username: "user", password: "user123", role: "user" },
@@ -34,7 +58,7 @@ const MONGO_URI = process.env.FOCUSFLOW_MONGO_URI ?? "mongodb://localhost:27017/
 const MONGO_DB_NAME = getMongoDatabaseName(MONGO_URI);
 
 let sqliteSingleton: DatabaseInstance | null = null;
-let mongoCollectionPromise: Promise<Collection<MongoUserDocument>> | null = null;
+let mongoOrmPromise: Promise<MikroORM<MongoDriver>> | null = null;
 
 function ensureDirectoryExists(filePath: string) {
   const directory = path.dirname(filePath);
@@ -96,48 +120,47 @@ function getMongoDatabaseName(uri: string) {
   }
 }
 
-async function getMongoCollection() {
-  if (!mongoCollectionPromise) {
-    mongoCollectionPromise = (async () => {
-      const client = new MongoClient(MONGO_URI);
-      await client.connect();
-      const db = client.db(MONGO_DB_NAME);
-      const collection = db.collection<MongoUserDocument>("users");
-      await collection.createIndex({ usernameLower: 1 }, { unique: true });
-      await seedMongoDefaultUsers(collection);
-      return collection;
-    })();
+async function initializeMongoOrm() {
+  if (!mongoOrmPromise) {
+    mongoOrmPromise = MikroORM.init<MongoDriver>({
+      entities: [UserEntity],
+      clientUrl: MONGO_URI,
+      dbName: MONGO_DB_NAME,
+      driver: MongoDriver,
+    }).then(async (orm: MikroORM<MongoDriver>) => {
+      const generator = orm.getSchemaGenerator();
+      if (typeof (generator as { ensureIndexes?: () => Promise<void> }).ensureIndexes === "function") {
+        await (generator as { ensureIndexes: () => Promise<void> }).ensureIndexes();
+      }
+      await seedMongoDefaultUsers(orm.em);
+      return orm;
+    });
   }
 
-  return mongoCollectionPromise;
+  return mongoOrmPromise;
 }
 
-async function seedMongoDefaultUsers(collection: Collection<MongoUserDocument>) {
-  await Promise.all(
-    DEFAULT_USERS.map(({ username, password, role }, index) => {
-      const usernameLower = username.toLowerCase();
-      const filter = {
-        $or: [{ usernameLower }, { username }],
-      };
-
-      return collection.updateOne(
-        filter,
-        {
-          $setOnInsert: {
-            id: index + 1,
-            username,
-            usernameLower,
-            password_hash: hashSync(password, 10),
-            role,
-          },
-          $set: {
-            usernameLower,
-          },
-        },
-        { upsert: true }
-      );
-    })
-  );
+async function seedMongoDefaultUsers(em: EntityManager<MongoDriver>) {
+  const fork = em.fork();
+  for (const [index, { username, password, role }] of DEFAULT_USERS.entries()) {
+    const usernameLower = username.toLowerCase();
+    let user = await fork.findOne(UserEntity, { usernameLower });
+    if (!user) {
+      user = fork.create(UserEntity, {
+        id: index + 1,
+        username,
+        usernameLower,
+        password_hash: hashSync(password, 10),
+        role,
+      });
+      fork.persist(user);
+    } else {
+      user.password_hash = hashSync(password, 10);
+      user.role = role;
+      user.id = user.id ?? index + 1;
+    }
+    await fork.flush();
+  }
 }
 
 async function getUserByUsernameSqlite(username: string): Promise<UserRecord | null> {
@@ -151,33 +174,34 @@ async function getUserByUsernameSqlite(username: string): Promise<UserRecord | n
 }
 
 async function getUserByUsernameMongo(username: string): Promise<UserRecord | null> {
-  const collection = await getMongoCollection();
+  const orm = await initializeMongoOrm();
+  const em = orm.em.fork();
   const normalized = username.toLowerCase();
 
-  let doc = await collection.findOne({ usernameLower: normalized });
-  if (!doc) {
-    doc = await collection.findOne({ username });
-    if (doc && doc.username && doc.usernameLower !== doc.username.toLowerCase()) {
-      await collection.updateOne(
-        { _id: doc._id },
-        { $set: { usernameLower: doc.username.toLowerCase() } }
-      );
-    }
+  let user = await em.findOne(UserEntity, { usernameLower: normalized });
+  if (!user) {
+    user = await em.findOne(UserEntity, { username });
   }
 
-  if (!doc) {
+  if (!user) {
     return null;
   }
 
+  const normalizedUsername = user.username.toLowerCase();
+  if (user.usernameLower !== normalizedUsername) {
+    user.usernameLower = normalizedUsername;
+    await em.flush();
+  }
+
   return {
-    id: deriveNumericId(doc),
-    username: doc.username,
-    password_hash: doc.password_hash,
-    role: doc.role,
+    id: deriveNumericId(user),
+    username: user.username,
+    password_hash: user.password_hash,
+    role: user.role,
   };
 }
 
-function deriveNumericId(doc: MongoUserDocument) {
+function deriveNumericId(doc: { username: string; id?: number; _id?: ObjectId }) {
   if (typeof doc.id === "number" && Number.isFinite(doc.id)) {
     return doc.id;
   }

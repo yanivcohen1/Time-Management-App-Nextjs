@@ -23,7 +23,7 @@ These values are automatically loaded at startup and set as environment variable
 The app can run on either SQLite or MongoDB:
 
 - Set `dbProvider` to `sql` to use the local SQLite file defined by `dbPath.sql`.
-- Set `dbProvider` to `mongo` to point to the Mongo connection string in `dbPath.mongo` (compatible with MongoDB 3.6+).
+- Set `dbProvider` to `mongo` to point to the Mongo connection string in `dbPath.mongo`. The Mongo path runs on [MikroORM](https://mikro-orm.io/) (v5 driver stack) so we keep entity-level helpers (indexes, seeding, normalization) while remaining compatible with MongoDB 3.4+ clusters.
 
 Regardless of provider, the app seeds the same demo accounts (`user/user123`, `admin/admin123`). Existing Mongo records are automatically normalized the next time the server starts, so you can toggle between providers without manually clearing collections.
 
@@ -34,7 +34,7 @@ Regardless of provider, the app seeds the same demo accounts (`user/user123`, `a
 | `PORT` | Port for the development server. | 3000 (from config.yaml) |
 | `FOCUSFLOW_DB_PATH` | Absolute/relative path to the SQLite database file. | `<project>/data/focusflow.db` (from config.yaml) |
 | `FOCUSFLOW_DB_PROVIDER` | Active database backend. Set to `sql` or `mongo`. | `sql` (from config.yaml) |
-| `FOCUSFLOW_MONGO_URI` | MongoDB connection string. | `mongodb://localhost:27017/focusflow` (from config.yaml) |
+| `FOCUSFLOW_MONGO_URI` | MongoDB connection string consumed by MikroORM’s Mongo driver. | `mongodb://localhost:27017/focusflow` (from config.yaml) |
 | `FOCUSFLOW_LOG_LEVEL` | Log verbosity for server utilities. | `info` (from config.yaml) |
 | `FOCUSFLOW_JWT_SECRET` | Secret used to sign JWTs. | `focusflow-dev-secret-change-me` (from config.yaml, override in production) |
 | `FOCUSFLOW_JWT_EXPIRES_IN` | Expiry passed to `jsonwebtoken` (`1h`, `30m`, etc.). | `1h` |
@@ -78,7 +78,7 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 - **Todo Management**: FocusFlow todo dashboard with CRUD operations for tasks.
 - **UI Design System**: Radix UI components with Tailwind CSS v4 for modern, accessible interfaces.
 - **shadcn/ui Components**: Shared primitives in `src/components/ui` (button, popover, calendar) enable advanced widgets like the Date Picker showcased on the home page.
-- **Database**: Dual provider support with SQLite or MongoDB (3.6+ compatible) for persistence.
+- **Database**: Dual provider support with SQLite or MongoDB (3.4+ compatible via MikroORM) for persistence.
 - **Protected Routes**: Role-aware access control for pages like admin and user dashboards.
 - **Quick Links**: Dynamic deep links for user interactions.
 

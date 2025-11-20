@@ -41,7 +41,14 @@ process.env.FOCUSFLOW_DB_PROVIDER = normalizedProvider;
 process.env.FOCUSFLOW_LOG_LEVEL = logLevel;
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  experimental: {
+    serverComponentsExternalPackages: [
+      "@mikro-orm/core",
+      "@mikro-orm/mongodb",
+      "@mikro-orm/migrations-mongodb",
+      "@mikro-orm/reflection",
+    ],
+  },
 };
 
 export default nextConfig;
