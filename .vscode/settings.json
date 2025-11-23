@@ -1,0 +1,4 @@
+{
+  "cypressTestExplorer.testFiles": "**/*.cy.{js,ts,jsx,tsx}",
+  "cypressTestExplorer.env": {}
+}

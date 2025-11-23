@@ -81,6 +81,7 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 - **Database**: Dual provider support with SQLite or MongoDB (3.4+ compatible via MikroORM) for persistence.
 - **Protected Routes**: Role-aware access control for pages like admin and user dashboards.
 - **Quick Links**: Dynamic deep links for user interactions.
+- **End-to-End Testing**: Cypress for comprehensive e2e tests, integrated with VS Code test discovery.
 
 ## Project Structure
 
@@ -116,7 +117,8 @@ src/
 - `pnpm build`: Builds the application for production.
 - `pnpm start`: Starts the production server.
 - `pnpm lint`: Runs ESLint to check code quality.
-- `pnpm test`: Runs the test suite.
+- `pnpm test`: Runs the unit test suite with Jest.
+- `pnpm test:e2e`: Runs end-to-end tests with Cypress in Chrome browser.
 
 ## Learn More
 
