@@ -1,6 +1,7 @@
 # Time Management App
 ## TypeScript + Next.js
 ## Shadcn UI (Radix UI) components with Tailwind CSS v4
+## Cypress E2E testing
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
