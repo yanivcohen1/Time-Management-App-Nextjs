@@ -1,4 +1,9 @@
 {
-  "cypressTestExplorer.testFiles": "**/*.cy.{js,ts,jsx,tsx}",
-  "cypressTestExplorer.env": {}
+  "cypressTestExplorer.testFiles": "cypress/e2e/**/*.cy.{js,ts,jsx,tsx}",
+  "cypressTestExplorer.env": {},
+  "cypress.runner.config": {
+    "cypressPath": "npx cypress"
+  },
+  "cypress.runner.includeShadowDom": true,
+  "testExplorer.useNativeTesting": true
 }
