@@ -119,9 +119,26 @@ src/
 - `pnpm start`: Starts the production server.
 - `pnpm lint`: Runs ESLint to check code quality.
 - `pnpm test`: Runs the unit test suite with Jest.
-- `pnpm test:e2e`: Runs end-to-end tests with Cypress in Chrome browser.
+- `pnpm test:e2e`: Runs end-to-end tests with Cypress in Chrome browser and generates an HTML report (overwrites previous reports).
+- `pnpm test:e2e:no-report`: Runs end-to-end tests with Cypress in Chrome browser without generating a report.
 
-## Learn More
+## Testing
+
+The project includes unit tests with Jest and end-to-end (E2E) tests with Cypress.
+
+### Unit Tests
+Run unit tests using:
+```bash
+pnpm test
+```
+
+### End-to-End Tests
+E2E tests are configured to run in Chrome browser. You can run them with or without HTML report generation:
+
+- **With HTML Report**: `pnpm test:e2e` generates an HTML report at `cypress/reports/index.html` (overwrites previous reports).
+- **Without Report**: `pnpm test:e2e:no-report` runs tests without generating any reports.
+
+Reports include test results, screenshots of failures, and detailed logs. The HTML report is useful for CI/CD pipelines and manual review.
 
 To learn more about Next.js, take a look at the following resources:
 

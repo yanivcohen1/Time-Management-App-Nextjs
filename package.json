@@ -6,9 +6,10 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "eslint . --ext .ts,.tsx --max-warnings=0",
     "test": "jest",
-    "test:e2e": "cypress run --e2e --browser chrome"
+    "test:e2e": "cross-env CYPRESS_REPORTER=cypress-mochawesome-reporter cypress run --e2e --browser chrome",
+    "test:e2e:no-report": "cypress run --e2e --browser chrome"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.0.1",
@@ -62,7 +63,9 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "cross-env": "^10.1.0",
     "cypress": "^15.7.0",
+    "cypress-mochawesome-reporter": "^4.0.2",
     "eslint": "^9",
     "eslint-config-next": "15.5.4",
     "jest": "^30.2.0",
