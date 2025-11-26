@@ -20,6 +20,7 @@
     "@mikro-orm/mongodb": "^5.9.8",
     "@mikro-orm/reflection": "^5.9.8",
     "@primeuix/themes": "^1.2.5",
+    "@radix-ui/react-collapsible": "^1.1.12",
     "@radix-ui/react-popover": "^1.1.1",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/themes": "^3.2.1",
